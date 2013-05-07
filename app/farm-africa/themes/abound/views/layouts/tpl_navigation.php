@@ -8,7 +8,7 @@
           </a>
      
           <!-- Be sure to leave the brand out there if you want it shown -->
-          <a class="brand" href="#">abound <small>admin theme v1.1</small></a>
+          <a class="brand" href="#"><?php echo Yii::app()->name; ?> <small></small></a>
           
           <div class="nav-collapse">
 			<?php $this->widget('zii.widgets.CMenu',array(
