@@ -709,7 +709,7 @@ abstract class EActiveResource extends CModel {
             throw new EActiveResourceException('The resource cannot be inserted because it is not new.');
         if ($this->beforeSave()) {
             Yii::trace(get_class($this) . '.create()', 'ext.EActiveResource');
-
+            
             $response = $this->postRequest('collection', array(), $this->getAttributesToSend($attributes));
             $returnedmodel = $this->populateRecord($response->getData());
 

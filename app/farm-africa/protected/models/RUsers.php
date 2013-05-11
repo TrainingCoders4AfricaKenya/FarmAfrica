@@ -26,7 +26,8 @@ class RUsers extends EActiveResource {
         return CMap::mergeArray(
                         parent::rest(), array(
                     'resource' => 'users',
-                    'idProperty' => 'id',
+                    'idProperty' => 'userID',
+                    'container' => 'user',
                         )
         );
     }
@@ -82,34 +83,34 @@ class RUsers extends EActiveResource {
             'modifiedBy' => 'Modified By',
         );
     }
-    
+
     /**
      * this function defines the CArrayDataProvider attributes that will be used
      * when loading the admin view
      * @return type
      */
-    public function dataProviderAttributes(){
+    public function dataProviderAttributes() {
         //refer to Yii's CArrayDataProvider documentation
         //modify to taste
         return array(
             'caseSensitiveSort' => true,
-            'sort'=>array(
-                'attributes'=>array(
-                     'userID',
+            'sort' => array(
+                'attributes' => array(
+                    'userID',
                 ),
             ),
-            'pagination'=>array(
-                'pageSize'=>Yii::app()->params['DEFAULT_ADMIN_PAGE_SIZE'],
+            'pagination' => array(
+                'pageSize' => Yii::app()->params['DEFAULT_ADMIN_PAGE_SIZE'],
             ),
-            //un-comment to use these fields
-            /*
-            'id' => '',
-            'keyField' => '',
-            'data' => array(),
-            'itemCount'=> integer,
-            'rawData' => array(),
-            'totalItemCount' => integer
-             */
+                //un-comment to use these fields
+                /*
+                  'id' => '',
+                  'keyField' => '',
+                  'data' => array(),
+                  'itemCount'=> integer,
+                  'rawData' => array(),
+                  'totalItemCount' => integer
+                 */
         );
     }
 

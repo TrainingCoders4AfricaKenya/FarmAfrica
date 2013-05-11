@@ -104,6 +104,9 @@ class TestRestController extends Controller {
                 break;
         }
         //try to assign POST values to attributes
+        if(isset($_POST)){
+            Utils::log('DEBUG', 'POST REQUEST: ' . CJSON::encode($_POST), __CLASS__, __FUNCTION__, __LINE__, false);
+        }
         foreach ($_POST as $var => $value) {
             Utils::log('DEBUG', 'var: ' . $var . ' | value: ' . $value, __CLASS__, __FUNCTION__, __LINE__, false);
             //check if model has this attribute
@@ -119,17 +122,7 @@ class TestRestController extends Controller {
             $this->_sendResponse(200, CJSON::encode($model));
         } else {
             // Errors occurred
-            $msg = "<h1>Error</h1>";
-            $msg .= sprintf("Couldn't create model <b>%s</b>", $_GET['model']);
-            $msg .= "<ul>";
-            foreach ($model->errors as $attribute => $attr_errors) {
-                $msg .= "<li>Attribute: $attribute</li>";
-                $msg .= "<ul>";
-                foreach ($attr_errors as $attr_error)
-                    $msg .= "<li>$attr_error</li>";
-                $msg .= "</ul>";
-            }
-            $msg .= "</ul>";
+            $msg = APIUtils::packageModelErrors($model);
             $this->_sendResponse(500, $msg);
         }
     }

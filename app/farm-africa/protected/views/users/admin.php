@@ -56,6 +56,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         'dateModified',
         'modifiedBy',
         array(
+            'header' => 'Actions',
             'class' => 'CButtonColumn',
             'template' => '{view}{update}{delete}',
 //            'buttons' => array(

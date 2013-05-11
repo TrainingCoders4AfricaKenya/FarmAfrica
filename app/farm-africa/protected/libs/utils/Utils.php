@@ -26,6 +26,7 @@ class Utils {
         $logDirectory = self::getConfigValue('LOG_DIR', "/var/log/applications/FarmAfrica/UI/");
         $file = $logDirectory . "DEBUG.log";
         $date = date("Y-m-d H:i:s");
+        $date .= ' | '.microtime();
         $logType = null;
         $logType[0] = 'CRITICAL';
         $logType[1] = 'FATAL';
@@ -141,6 +142,25 @@ class Utils {
             return Yii::app()->params[$variableName];
         } else {
             return $defaultValue;
+        }
+    }
+    
+    /**
+     * function to format arrays to <b>JSON</b> or <b>Array</b>
+     * @param type $arrayToFormat
+     * @param type $format
+     * @return type
+     */
+    public static function formatArray($arrayToFormat, $format = 'json'){
+        $format = strtolower($format);
+        if($format == 'json'){
+            return CJSON::encode($arrayToFormat);
+        }
+        else if ($format == 'array'){
+            return (array) $arrayToFormat;
+        }
+        else{
+            return CJSON::encode($arrayToFormat);
         }
     }
 

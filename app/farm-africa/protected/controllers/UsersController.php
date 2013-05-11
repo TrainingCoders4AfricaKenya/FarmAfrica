@@ -14,7 +14,7 @@ class UsersController extends Controller {
     public function filters() {
         return array(
             'accessControl', // perform access control for CRUD operations
-            'postOnly + delete', // we only allow deletion via POST request
+//            'postOnly + delete', // we only allow deletion via POST request
         );
     }
 
@@ -58,15 +58,55 @@ class UsersController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        $model = new Users;
+        $model = new RUsers;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
+//        if (isset($_POST['RUsers'])) {
+//            $model->attributes = $_POST['RUsers'];
+//            if ($model->save()) {
+//                $this->redirect(array('view', 'id' => $model->userID));
+//            }
+//        }
+//        die();
 
-        if (isset($_POST['Users'])) {
-            $model->attributes = $_POST['Users'];
-            if ($model->save())
-                $this->redirect(array('view', 'id' => $model->userID));
+        if (isset($_POST['RUsers'])) {
+            Utils::log('INFO', 'POST REQUEST: '.CJSON::encode($_POST), __CLASS__, __FUNCTION__, __LINE__);
+            $model->attributes = $_POST['RUsers'];
+            Utils::log('INFO', 'ATTRIBUTES: '.CJSON::encode($model->attributes), __CLASS__, __FUNCTION__, __LINE__);
+            
+            try {
+                $saveOK = $model->save();
+                if ($saveOK) {
+                    $this->redirect(array('view', 'id' => $model->userID));
+                } else {
+                    
+                }
+            } catch (EActiveResourceRequestException $resourceExc) {
+                Utils::log('EXCEPTION', 'EActiveResourceRequestException ON CREATE USER | CODE: '
+                        . $resourceExc->getCode() . ' | MESSAGE: ' . $resourceExc->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
+                //an error occurred while doing processing
+                $modelErrors = array();
+                $errorMsg = $resourceExc->getMessage();
+                $modelErrors = (array)CJSON::decode($errorMsg);
+                if($modelErrors == null || empty($modelErrors) || !isset($modelErrors['modelErrors'])){
+                    //error that occurred wasn't model-related
+                    Utils::log('ERROR', 'NON-MODEL ERROR OCCURRED WHILE TRYING TO CREATE USER | '
+                            .CJSON::encode($errorMsg),__CLASS__, __FUNCTION__, __LINE__ );
+                    Yii::app()->user->setFlash('error', 'Error occurred');
+                }
+                else{
+                    $model->addErrors($modelErrors['modelErrors']);
+                }
+                
+                $this->render('create', array(
+                    'model' => $model,
+                ));
+                Yii::app()->end();
+                
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
         }
 
         $this->render('create', array(
@@ -85,15 +125,19 @@ class UsersController extends Controller {
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['Users'])) {
-            $model->attributes = $_POST['Users'];
-            if ($model->save())
+        if (isset($_POST['RUsers'])) {
+            $model->attributes = $_POST['RUsers'];
+            if ($model->save()){
+//                die('SAVE OK');
                 $this->redirect(array('view', 'id' => $model->userID));
+            }
+                
         }
-
+        
         $this->render('update', array(
             'model' => $model,
         ));
+        exit();
     }
 
     /**
@@ -102,11 +146,17 @@ class UsersController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
 
-        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        if (isset($_POST['Users'])) {
+            $model->attributes = $_POST['Users'];
+            if ($model->save())
+                $this->redirect(array('view', 'id' => $model->userID));
+        }
+
+        $this->render('delete', array(
+            'model' => $model,
+        ));
     }
 
     /**

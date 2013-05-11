@@ -90,7 +90,7 @@ $base_config = array(
             'connectionString' => 'mysql:host=localhost;dbname=farmAfrica',
             'emulatePrepare' => true,
             'username' => 'farmAfrica',
-            'password' => '#Mkul1ma5*',
+            'password' => 'r00t',
             'charset' => 'utf8',
         ),
         'errorHandler' => array(
@@ -102,7 +102,12 @@ $base_config = array(
             'routes' => array(
                 array(
                     'class' => 'CFileLogRoute',
-                    'levels' => 'error, warning',
+                    'levels' => 'error, warning, trace',
+                    'enabled' => true,
+                    'logFile' => 'YII.log',
+                    'logPath' => '/var/log/applications/FarmAfrica/UI/',
+                    'maxFileSize' => '100000',
+                    'maxLogFiles' => '10',
                 ),
                 // uncomment the following to show log messages on web pages
 //                array(
@@ -114,7 +119,7 @@ $base_config = array(
         //used by EActiveResource
         'activeresource' => array(
             'class' => 'EActiveResourceConnection',
-            'site' => 'http://localhost/FarmAfrica/index.php/API/TestRest',
+            'site' => 'http://127.0.0.1/FarmAfrica/index.php/API/TestRest',
             'contentType' => 'application/json',
             'acceptType' => 'application/json',
 //            'idProperty' => 'id',

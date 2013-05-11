@@ -71,6 +71,14 @@ class RestUtils {
         $dataProvider=new CArrayDataProvider($dataItems, $dataProviderAttributes);
         return $dataProvider;
     }
+    
+    public static function formatPOSTData($dataArray){
+        $fields_string = '';
+        foreach ($dataArray as $key => $value) {
+            $fields_string .= $key . '=' . $value . '&';
+        }
+        return $fields_string;
+    }
 }
 
 ?>
