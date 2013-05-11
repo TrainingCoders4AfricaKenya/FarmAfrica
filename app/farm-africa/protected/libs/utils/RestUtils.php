@@ -55,6 +55,30 @@ class RestUtils {
 
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
+    
+    public static function createDataProvider($model, $dataProviderAttributes = null){
+        
+        //we have to create an array which will be used to return a CArrayDataProvider
+        $className = get_class($model);
+        if(!$className){
+            
+        }
+        $dataItems = $className::model()->findAll();
+        if($dataProviderAttributes == null){
+            //if this isn't defined, use settings for this model
+            $dataProviderAttributes = $className::model()->dataProviderAttributes();
+        }
+        $dataProvider=new CArrayDataProvider($dataItems, $dataProviderAttributes);
+        return $dataProvider;
+    }
+    
+    public static function formatPOSTData($dataArray){
+        $fields_string = '';
+        foreach ($dataArray as $key => $value) {
+            $fields_string .= $key . '=' . $value . '&';
+        }
+        return $fields_string;
+    }
 }
 
 ?>

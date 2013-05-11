@@ -4,7 +4,7 @@
 // Yii::setPathOfAlias('local','path/to/local-folder');
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
-return array(
+$base_config = array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
     'name' => 'FarmAfrica',
     'theme' => 'abound',
@@ -16,6 +16,9 @@ return array(
         'application.components.*',
         'application.controllers.*',
         'application.libs.utils.*',
+        'application.extensions.EActiveResource.*',
+        'application.modules.API.controllers.*',
+        'application.modules.API.models.*',
     ),
     'modules' => array(
         // uncomment the following to enable the Gii tool
@@ -26,6 +29,7 @@ return array(
             // If removed, Gii defaults to localhost only. Edit carefully to taste.
             'ipFilters' => array('127.0.0.1', '::1'),
         ),
+        'API',
     ),
     // application components
     'components' => array(
@@ -39,32 +43,31 @@ return array(
             'rules' => array(
                 // REST patterns
                 array(
-                    'api/list',
-                    'pattern' => 'api/<model:\w+>',
+                    'API/TestRest/list',
+                    'pattern' => 'API/TestRest/<model:\w+>',
                     'verb' => 'GET'
                 ),
                 array(
-                    'api/view',
-                    'pattern' => 'api/<model:\w+>/<id:\d+>',
+                    'API/TestRest/view',
+                    'pattern' => 'API/TestRest/<model:\w+>/<id:\d+>',
                     'verb' => 'GET'
                 ),
                 array(
-                    'api/update',
-                    'pattern' => 'api/<model:\w+>/<id:\d+>',
+                    'API/TestRest/update',
+                    'pattern' => 'API/TestRest/<model:\w+>/<id:\d+>',
                     'verb' => 'PUT'
                 ),
                 array(
-                    'api/delete',
-                    'pattern' => 'api/<model:\w+>/<id:\d+>',
+                    'API/TestRest/delete',
+                    'pattern' => 'API/TestRest/<model:\w+>/<id:\d+>',
                     'verb' => 'DELETE'
                 ),
                 array(
-                    'api/create',
-                    'pattern' => 'api/<model:\w+>',
+                    'API/TestRest/create',
+                    'pattern' => 'API/TestRest/<model:\w+>',
                     'verb' => 'POST'
                 ),
                 // Other controllers
-//                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
@@ -87,7 +90,7 @@ return array(
             'connectionString' => 'mysql:host=localhost;dbname=farmAfrica',
             'emulatePrepare' => true,
             'username' => 'farmAfrica',
-            'password' => '#Mkul1ma5*',
+            'password' => 'r00t',
             'charset' => 'utf8',
         ),
         'errorHandler' => array(
@@ -99,21 +102,35 @@ return array(
             'routes' => array(
                 array(
                     'class' => 'CFileLogRoute',
-                    'levels' => 'error, warning',
+                    'levels' => 'error, warning, trace',
+                    'enabled' => true,
+                    'logFile' => 'YII.log',
+                    'logPath' => '/var/log/applications/FarmAfrica/UI/',
+                    'maxFileSize' => '100000',
+                    'maxLogFiles' => '10',
                 ),
-            // uncomment the following to show log messages on web pages
-            /*
-              array(
-              'class'=>'CWebLogRoute',
-              ),
-             */
+                // uncomment the following to show log messages on web pages
+//                array(
+//                    'class' => 'CWebLogRoute',
+//                    'levels' => 'trace',
+//                ),
             ),
         ),
+        //used by EActiveResource
+        'activeresource' => array(
+            'class' => 'EActiveResourceConnection',
+            'site' => 'http://127.0.0.1/FarmAfrica/index.php/API/TestRest',
+            'contentType' => 'application/json',
+            'acceptType' => 'application/json',
+//            'idProperty' => 'id',
+//            'queryCacheId' => 'cache'
+        )
     ),
     // application-level parameters that can be accessed
     // using Yii::app()->params['paramName']
-    'params' => array(
-        // this is used in contact page
-        'adminEmail' => 'webmaster@example.com',
+    'params' => CMap::mergeArray(
+            require ('system.php'), require ('users.php')
     ),
 );
+
+return $base_config;
