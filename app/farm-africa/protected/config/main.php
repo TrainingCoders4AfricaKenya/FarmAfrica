@@ -20,6 +20,8 @@ $base_config = array(
         'application.modules.API.controllers.*',
         'application.modules.API.models.*',
     ),
+    # Language Setting
+    'language' => 'en_gb',
     'modules' => array(
         // uncomment the following to enable the Gii tool
 
