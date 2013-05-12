@@ -163,6 +163,16 @@ class Utils {
             return CJSON::encode($arrayToFormat);
         }
     }
+    
+    /**
+     * Return the current Date and time in the standard format
+     * @param string $format the format in which to return the date
+     * @return string
+     */
+    public static function now($format = 'Y-m-d H:i:s') {
+        //new CDbExpression('now()');
+        return date($format);
+    }
 
 }
 
