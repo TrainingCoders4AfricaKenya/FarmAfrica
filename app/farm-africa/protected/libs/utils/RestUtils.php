@@ -61,7 +61,7 @@ class RestUtils {
         //we have to create an array which will be used to return a CArrayDataProvider
         $className = get_class($model);
         if(!$className){
-            
+            return null;
         }
         $dataItems = $className::model()->findAll();
         if($dataProviderAttributes == null){
@@ -70,6 +70,22 @@ class RestUtils {
         }
         $dataProvider=new CArrayDataProvider($dataItems, $dataProviderAttributes);
         return $dataProvider;
+    }
+    
+    public static function getDataProviderColumnNames($model, $columnsToDisplay = array()){
+        $className = get_class($model);
+        if(!$className){
+            return null;
+        }
+        $attributeLabels = $className::model()->attributeLabels();
+        $columnNames = array();
+        foreach($attributeLabels as $k=>$v){
+            if(!in_array($k, $columnsToDisplay))
+                continue;
+            $columnNames[] = $k.':raw:'.$v;
+        }
+        Utils::log('INFO', 'COLUMNS: '.CJSON::encode($columnNames));
+        return $columnNames;
     }
     
     public static function formatPOSTData($dataArray){

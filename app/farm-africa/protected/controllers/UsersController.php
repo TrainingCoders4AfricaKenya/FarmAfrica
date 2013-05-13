@@ -76,11 +76,11 @@ class UsersController extends Controller {
             Utils::log('INFO', 'ATTRIBUTES: '.CJSON::encode($model->attributes), __CLASS__, __FUNCTION__, __LINE__);
             
             try {
-                $saveOK = $model->save();
+                $saveOK = $model->save(true, $model->attributes);
                 if ($saveOK) {
                     $this->redirect(array('view', 'id' => $model->userID));
                 } else {
-                    
+                    Utils::log('INFO', 'SAVE NOT OK'.CJSON::encode($model->getErrors()));
                 }
             } catch (EActiveResourceRequestException $resourceExc) {
                 Utils::log('EXCEPTION', 'EActiveResourceRequestException ON CREATE USER | CODE: '

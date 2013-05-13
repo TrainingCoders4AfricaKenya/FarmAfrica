@@ -5,5 +5,9 @@
  * application
  */
 return array(
+    'dateCreated' => 'Date Created',
+    'dateModified' => 'Date Modified',
+    'createdBy' => 'Created By',
+    'modifiedBy' => 'Modified By',
 );
 ?>

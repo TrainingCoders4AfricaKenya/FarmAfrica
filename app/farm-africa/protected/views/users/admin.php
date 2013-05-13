@@ -42,8 +42,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'users-grid',
 //	'dataProvider'=>$model->search(),
     'dataProvider' => RestUtils::createDataProvider($model),
-//	'filter'=>$model,
-    'columns' => array(
+    'columns' => CMap::mergeArray(RestUtils::getDataProviderColumnNames($model, array(
         'userID',
         'userName',
         'firstName',
@@ -55,26 +54,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
         'createdBy',
         'dateModified',
         'modifiedBy',
-        array(
-            'header' => 'Actions',
-            'class' => 'CButtonColumn',
-            'template' => '{view}{update}{delete}',
-//            'buttons' => array(
-//                'view' => array(
-//                    'imageUrl' => Yii::app()->request->baseUrl . '/images/view.png',
-//                    'url' => 'Yii::app()->createUrl("/UI/' . $module . '/admin")',
-//                    'visible' => '0',
-//                ),
-//                'update' => PermissionUtils::adminButtons($array = array(
-//                    'imageUrl' => Yii::app()->request->baseUrl . '/images/update.png',
-//                    'url' => 'Yii::app()->createUrl("/UI/bundles/update/",array("id"=>$data->bundleID))'), $action = 'update', $module = 'bundles'
-//                ),
-//                'remove' => PermissionUtils::adminButtons($array = array(
-//                    'imageUrl' => Yii::app()->request->baseUrl . '/images/delete.png',
-//                    'url' => 'Yii::app()->createUrl("/UI/bundles/delete/",array("id"=>$data->bundleID))'), $action = 'delete', $module = 'bundles'
-//                ),
-//            ),
-        ),
-    ),
+    )),  array())
 ));
 ?>

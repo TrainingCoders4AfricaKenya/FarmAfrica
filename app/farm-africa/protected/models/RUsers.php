@@ -5,7 +5,7 @@
  *
  * @author muya
  */
-class RUsers extends EActiveResource {
+class RUsers extends GenericActiveResource {
     /* The id that uniquely identifies a person. This attribute is not defined
      * as a property      
      * because we don't want to send it back to the service like a name, surname or    
@@ -34,26 +34,21 @@ class RUsers extends EActiveResource {
 
     //let's define some properties and their data types
     public function properties() {
-        return array(
-            'userID' => array('type' => 'integer'),
-            'userName' => array('type' => 'string'),
-            'firstName' => array('type' => 'string'),
-            'lastName' => array('type' => 'string'),
-            'emailAddress' => array('type' => 'string'),
-            'phoneNumber' => array('type' => 'string'),
-            'status' => array('type' => 'integer'),
-            'dateCreated' => array('type' => 'datetime'),
-            'createdBy' => array('type' => 'integer'),
-            'dateModified' => array('type' => 'timestamp'),
-            'modifiedBy' => array('type' => 'integer'),
-        );
+        return CMap::mergeArray(parent::properties(), array(
+                    'userID' => array('type' => 'integer'),
+                    'userName' => array('type' => 'string'),
+                    'firstName' => array('type' => 'string'),
+                    'lastName' => array('type' => 'string'),
+                    'emailAddress' => array('type' => 'string'),
+                    'phoneNumber' => array('type' => 'string'),
+        ));
     }
 
     /* Define the rules */
 
     public function rules() {
         return array(
-            array('userName, firstName, lastName, status, dateCreated, createdBy, dateModified, modifiedBy', 'required'),
+            array('userName, firstName, lastName', 'required'),
             array('userName', 'length', 'max' => 30),
             array('firstName, lastName', 'length', 'max' => 45),
             array('emailAddress', 'length', 'max' => 100),
@@ -69,19 +64,14 @@ class RUsers extends EActiveResource {
      * @return array customized attribute labels (name=>label)
      */
     public function attributeLabels() {
-        return array(
-            'userID' => 'User',
-            'userName' => 'User Name',
-            'firstName' => 'First Name',
-            'lastName' => 'Last Name',
-            'emailAddress' => 'Email Address',
-            'phoneNumber' => 'Phone Number',
-            'status' => 'Status',
-            'dateCreated' => 'Date Created',
-            'createdBy' => 'Created By',
-            'dateModified' => 'Date Modified',
-            'modifiedBy' => 'Modified By',
-        );
+        return CMap::mergeArray(array(
+                    'userID' => 'User',
+                    'userName' => 'User Name',
+                    'firstName' => 'First Name',
+                    'lastName' => 'Last Name',
+                    'emailAddress' => 'Email Address',
+                    'phoneNumber' => 'Phone Number',
+        ), parent::attributeLabels());
     }
 
     /**
@@ -102,9 +92,10 @@ class RUsers extends EActiveResource {
             'pagination' => array(
                 'pageSize' => Yii::app()->params['DEFAULT_ADMIN_PAGE_SIZE'],
             ),
+            'id' => 'users-admin',
+            'keyField' => 'userID',
                 //un-comment to use these fields
                 /*
-                  'id' => '',
                   'keyField' => '',
                   'data' => array(),
                   'itemCount'=> integer,

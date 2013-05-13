@@ -16,7 +16,7 @@
  * @property string $dateModified
  * @property string $modifiedBy
  */
-class Users extends CActiveRecord {
+class Users extends GenericAR {
 
     /**
      * Returns the static model of the specified AR class.

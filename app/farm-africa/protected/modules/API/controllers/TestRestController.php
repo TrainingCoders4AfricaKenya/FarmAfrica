@@ -118,12 +118,14 @@ class TestRestController extends Controller {
         }
 
         //try to save model
-        if ($model->save()) {
-            $this->_sendResponse(200, CJSON::encode($model));
-        } else {
+        $saveResponse = $model->modelAction(GenericAR::CREATE);
+        if (!$saveResponse['STATUS']) {
+            Utils::log('INFO', 'AN ERROR OCCURRED WHILE SAVING MODEL |  ' . CJSON::encode($saveResponse), __CLASS__, __FUNCTION__, __LINE__, false);
             // Errors occurred
             $msg = APIUtils::packageModelErrors($model);
             $this->_sendResponse(500, $msg);
+        } else {
+            $this->_sendResponse(200, CJSON::encode($model));
         }
     }
 

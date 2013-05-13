@@ -6,7 +6,7 @@
  * data can identity the user.
  */
 class UserIdentity extends CUserIdentity {
-
+    private $userID;
     /**
      * Authenticates a user.
      * The example implementation makes sure if the username and password

@@ -45,36 +45,6 @@
 		<?php echo $form->error($model,'phoneNumber'); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'status'); ?>
-		<?php echo $form->textField($model,'status',array('size'=>11,'maxlength'=>11)); ?>
-		<?php echo $form->error($model,'status'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'dateCreated'); ?>
-		<?php echo $form->textField($model,'dateCreated'); ?>
-		<?php echo $form->error($model,'dateCreated'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'createdBy'); ?>
-		<?php echo $form->textField($model,'createdBy',array('size'=>11,'maxlength'=>11)); ?>
-		<?php echo $form->error($model,'createdBy'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'dateModified'); ?>
-		<?php echo $form->textField($model,'dateModified'); ?>
-		<?php echo $form->error($model,'dateModified'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'modifiedBy'); ?>
-		<?php echo $form->textField($model,'modifiedBy',array('size'=>11,'maxlength'=>11)); ?>
-		<?php echo $form->error($model,'modifiedBy'); ?>
-	</div>
-
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewResource ? 'Create' : 'Save'); ?>
 	</div>
