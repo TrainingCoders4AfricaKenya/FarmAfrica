@@ -81,8 +81,8 @@ class GenericAR extends CActiveRecord {
     private function create($override = false) {
         Utils::log('INFO', 'ABOUT TO PERFORM ACTION CREATE', __CLASS__, __FUNCTION__, __LINE__);
         $actionResponse = array();
-        $this->insertedBy = Yii::app()->user->userID;
-        $this->modifiedBy = Yii::app()->user->userID;
+//        $this->insertedBy = Yii::app()->user->userID;
+//        $this->modifiedBy = Yii::app()->user->userID;
         $this->dateCreated = Utils::now();
         $this->status = StatCodes::ES_ACTIVE;
 
@@ -91,6 +91,7 @@ class GenericAR extends CActiveRecord {
             if (!$actionResponse['STATUS']) {
                 //save failed
                 Utils::log('ERROR', 'AN ERROR OCCURRED WHILE TRYING TO SAVE THE MODEL', __CLASS__, __FUNCTION__, __LINE__);
+                $actionResponse['ERROR'] = $this->getErrors();
                 $actionResponse['REASON'] = Yii::t(Yii::app()->language, 'failedToCreateThe{model}Record', array('{model}' => ucfirst($this->tableName())));
             } else {
                 //save was ok
@@ -115,6 +116,7 @@ class GenericAR extends CActiveRecord {
             $actionResponse['ERROR'] = $dbExc;
             $actionResponse['REASON'] = Yii::t(Yii::app()->language, 'anErrorOccurredWhileCreatingThe{model}Record', array('{model}' => ucfirst($this->tableName())));
         }
+        $actionResponse['DATA']['model'] = $this;
         return $actionResponse;
     }
 

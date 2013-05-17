@@ -26,7 +26,7 @@ class Utils {
         $logDirectory = self::getConfigValue('LOG_DIR', "/var/log/applications/FarmAfrica/UI/");
         $file = $logDirectory . "DEBUG.log";
         $date = date("Y-m-d H:i:s");
-        $date .= ' | '.microtime();
+        $date .= ' | ' . microtime();
         $logType = null;
         $logType[0] = 'CRITICAL';
         $logType[1] = 'FATAL';
@@ -85,7 +85,7 @@ class Utils {
 //            EmailHandler::sendRedAlert($sendToUserID, "$date -[$logTitle] $fileName:$lineNo $function| $logString");
 //        }
     }
-    
+
     /**
      * Return an array as a string indicating all keys and values
      * @param Array $theArray Array to be rendered
@@ -131,7 +131,7 @@ class Utils {
         }
         return $myString;
     }
-    
+
     /**
      * get pre-defined variable values from main.php
      * @param string $variableName
@@ -144,26 +144,24 @@ class Utils {
             return $defaultValue;
         }
     }
-    
+
     /**
      * function to format arrays to <b>JSON</b> or <b>Array</b>
      * @param type $arrayToFormat
      * @param type $format
      * @return type
      */
-    public static function formatArray($arrayToFormat, $format = 'json'){
+    public static function formatArray($arrayToFormat, $format = 'json') {
         $format = strtolower($format);
-        if($format == 'json'){
+        if ($format == 'json') {
             return CJSON::encode($arrayToFormat);
-        }
-        else if ($format == 'array'){
+        } else if ($format == 'array') {
             return (array) $arrayToFormat;
-        }
-        else{
+        } else {
             return CJSON::encode($arrayToFormat);
         }
     }
-    
+
     /**
      * Return the current Date and time in the standard format
      * @param string $format the format in which to return the date
@@ -172,6 +170,34 @@ class Utils {
     public static function now($format = 'Y-m-d H:i:s') {
         //new CDbExpression('now()');
         return date($format);
+    }
+    
+    /**
+     * function to format a response within the System
+     * @param mixed $data  any data required
+     * @param int $statCode status code for the response, maps to a status code 
+     * in statusCodes table
+     * @param int $statType stat type for the $statCode
+     * @param mixed $statDesc description for the status code
+     * @return array formatted response
+     */
+    public static function formatResponse($data = null, $statCode = null, 
+            $statType = null, $statDesc = null){
+        return array(
+            'DATA' => $data,
+            'STATUS_CODE' => $statCode,
+            'STATUS_TYPE' => $statType,
+            'STATUS_DESCRIPTION' => $statDesc,
+        );
+    }
+    
+    /**
+     * this method parses a string to how we name classes in our app
+     * @param String $className
+     * @return String $className the correct class name
+     */
+    public static function parseClassName($className){
+        return ucfirst($className);
     }
 
 }

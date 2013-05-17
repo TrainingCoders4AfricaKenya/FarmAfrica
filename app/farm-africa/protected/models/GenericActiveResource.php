@@ -66,14 +66,10 @@ class GenericActiveResource extends EActiveResource {
                  */
         );
     }
-
-    /**
-     * add default params (dateCreated, createdBy, dateModified, modifiedBy)
-     * where necessary
-     */
-    protected function beforeValidate() {
-        Utils::log('DEBUG', 'WILL RUN BEFORE VALIDATE');
+    
+    public function save($runValidation = true, $attributes = null) {
         if ($this->isNewResource) {
+            Utils::log('DEBUG', 'NEW RESOURCE');
             //if this is a new record, set createdBy, dateCreated, modifiedBy 
             //(dateModified is auto in db)
             $this->status = 1;
@@ -82,12 +78,39 @@ class GenericActiveResource extends EActiveResource {
             $this->modifiedBy = Yii::app()->user->userID;
             $this->dateModified = Utils::now();
         } else {
+            Utils::log('DEBUG', 'UPDATE RESOURCE');
             //for update, just set modifiedBy (dateModified is auto in db)
             $this->dateModified = Utils::now();  //just in case :-)
             $this->modifiedBy = Yii::app()->user->userID;
         }
-        parent::beforeValidate();
+        return parent::save($runValidation, $attributes);
     }
+
+    /**
+     * add default params (dateCreated, createdBy, dateModified, modifiedBy)
+     * where necessary
+     */
+//    protected function beforeValidate() {
+//        Utils::log('DEBUG', 'WILL RUN BEFORE VALIDATE: '.CJSON::encode($this->getValidators()));
+////        die();
+//        if ($this->isNewResource) {
+//            Utils::log('DEBUG', 'NEW RESOURCE');
+//            //if this is a new record, set createdBy, dateCreated, modifiedBy 
+//            //(dateModified is auto in db)
+//            $this->status = 1;
+//            $this->createdBy = Yii::app()->user->userID;
+//            $this->dateCreated = Utils::now();
+//            $this->modifiedBy = Yii::app()->user->userID;
+//            $this->dateModified = Utils::now();
+//        } else {
+//            Utils::log('DEBUG', 'UPDATE RESOURCE');
+//            //for update, just set modifiedBy (dateModified is auto in db)
+//            $this->dateModified = Utils::now();  //just in case :-)
+//            $this->modifiedBy = Yii::app()->user->userID;
+//        }
+//        Utils::log('DEBUG', 'CURRENT STATE: '.CJSON::encode($this));
+//        parent::beforeValidate();
+//    }
 
 }
 

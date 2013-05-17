@@ -41,7 +41,7 @@ $('.search-form form').submit(function(){
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'users-grid',
 //	'dataProvider'=>$model->search(),
-    'dataProvider' => RestUtils::createDataProvider($model),
+    'dataProvider' => $dataProvider,
     'columns' => CMap::mergeArray(RestUtils::getDataProviderColumnNames($model, array(
         'userID',
         'userName',

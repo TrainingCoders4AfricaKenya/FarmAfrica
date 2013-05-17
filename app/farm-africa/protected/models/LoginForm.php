@@ -60,7 +60,7 @@ class LoginForm extends CFormModel {
         }
         if ($this->_identity->errorCode === UserIdentity::ERROR_NONE) {
             $duration = $this->rememberMe ? 3600 * 24 * 30 : 0; // 30 days
-            if(!Yii::app()->getUser()->hasState('userID')){
+            if((!isset(Yii::app()->user->isGuest )) && !Yii::app()->getUser()->hasState('userID')){
                 Yii::app()->getUser()->setState('userID', 2);
             }
             
