@@ -58,7 +58,7 @@ class UsersController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        $model = new RUsers;
+        $model = new RUsers();
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -80,7 +80,7 @@ class UsersController extends Controller {
                 if ($saveOK) {
                     $this->redirect(array('view', 'id' => $model->userID));
                 } else {
-                    
+                    Utils::log('INFO', 'SAVE NOT OK'.CJSON::encode($model->getErrors()));
                 }
             } catch (EActiveResourceRequestException $resourceExc) {
                 Utils::log('EXCEPTION', 'EActiveResourceRequestException ON CREATE USER | CODE: '
@@ -178,9 +178,16 @@ class UsersController extends Controller {
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Users']))
             $model->attributes = $_GET['Users'];
-
+        
+        //use model to get the data provider required
+        $dataProvider = RestUtils::createDataProvider($model);
+        
+        if($dataProvider == null){
+            throw new CHttpException(500, 'Server error occurred');
+        }
         $this->render('admin', array(
             'model' => $model,
+            'dataProvider' => $dataProvider,
         ));
     }
 

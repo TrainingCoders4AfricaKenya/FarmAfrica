@@ -61,15 +61,43 @@ class RestUtils {
         //we have to create an array which will be used to return a CArrayDataProvider
         $className = get_class($model);
         if(!$className){
-            
+            return null;
         }
-        $dataItems = $className::model()->findAll();
+        
+        try {
+            $dataItems = $className::model()->findAll();
+        }
+        catch (EActiveResourceRequestException $EARReqExc){
+            Utils::log('EXCEPTION', 'AN EActiveResourceRequestException OCCURRED WHILE TRYING TO CREATE DATA PROVIDER | '.CJSON::encode($EARReqExc->getMessage()), __CLASS__, __FUNCTION__, __LINE__, true);
+            return null;
+        }
+        catch (Exception $exc) {
+            Utils::log('EXCEPTION', 'AN Unknown Exception OCCURRED WHILE TRYING TO CREATE DATA PROVIDER | '.CJSON::encode($exc->getMessage()), __CLASS__, __FUNCTION__, __LINE__, true);
+            return null;
+        }
+        
         if($dataProviderAttributes == null){
             //if this isn't defined, use settings for this model
             $dataProviderAttributes = $className::model()->dataProviderAttributes();
         }
         $dataProvider=new CArrayDataProvider($dataItems, $dataProviderAttributes);
         return $dataProvider;
+    }
+    
+    public static function getDataProviderColumnNames($model, $columnsToDisplay = array()){
+        $className = get_class($model);
+        if(!$className){
+            return null;
+        }
+        $attributeLabels = $className::model()->attributeLabels();
+        $columnNames = array();
+        foreach($attributeLabels as $k=>$v){
+            if(!in_array($k, $columnsToDisplay))
+                continue;
+            $columnNames[] = $k.':raw:'.$v;
+        }
+        Utils::log('INFO', 'COLUMNS: '.CJSON::encode($columnNames));
+        return $columnNames;
     }
     
     public static function formatPOSTData($dataArray){
