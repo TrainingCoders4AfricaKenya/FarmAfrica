@@ -63,7 +63,19 @@ class RestUtils {
         if(!$className){
             return null;
         }
-        $dataItems = $className::model()->findAll();
+        
+        try {
+            $dataItems = $className::model()->findAll();
+        }
+        catch (EActiveResourceRequestException $EARReqExc){
+            Utils::log('EXCEPTION', 'AN EActiveResourceRequestException OCCURRED WHILE TRYING TO CREATE DATA PROVIDER | '.CJSON::encode($EARReqExc->getMessage()), __CLASS__, __FUNCTION__, __LINE__, true);
+            return null;
+        }
+        catch (Exception $exc) {
+            Utils::log('EXCEPTION', 'AN Unknown Exception OCCURRED WHILE TRYING TO CREATE DATA PROVIDER | '.CJSON::encode($exc->getMessage()), __CLASS__, __FUNCTION__, __LINE__, true);
+            return null;
+        }
+        
         if($dataProviderAttributes == null){
             //if this isn't defined, use settings for this model
             $dataProviderAttributes = $className::model()->dataProviderAttributes();

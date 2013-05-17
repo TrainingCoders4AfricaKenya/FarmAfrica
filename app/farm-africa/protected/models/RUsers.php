@@ -27,7 +27,8 @@ class RUsers extends GenericActiveResource {
                         parent::rest(), array(
                     'resource' => 'users',
                     'idProperty' => 'userID',
-                    'container' => 'user',
+                    'container' => 'users',
+                    'multiContainer' => 'DATA',
                         )
         );
     }
@@ -48,12 +49,12 @@ class RUsers extends GenericActiveResource {
 
     public function rules() {
         return array(
-            array('userName, firstName, lastName', 'required'),
+//            array('userName, firstName, lastName', 'required'),
             array('userName', 'length', 'max' => 30),
             array('firstName, lastName', 'length', 'max' => 45),
             array('emailAddress', 'length', 'max' => 100),
             array('phoneNumber', 'length', 'max' => 15),
-            array('status, createdBy, modifiedBy', 'length', 'max' => 11),
+//            array('status, createdBy, modifiedBy', 'length', 'max' => 11),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
             array('userID, userName, firstName, lastName, emailAddress, phoneNumber, status, dateCreated, createdBy, dateModified, modifiedBy', 'safe', 'on' => 'search'),
@@ -65,12 +66,12 @@ class RUsers extends GenericActiveResource {
      */
     public function attributeLabels() {
         return CMap::mergeArray(array(
-                    'userID' => 'User',
-                    'userName' => 'User Name',
-                    'firstName' => 'First Name',
-                    'lastName' => 'Last Name',
-                    'emailAddress' => 'Email Address',
-                    'phoneNumber' => 'Phone Number',
+                    'userID' => Yii::t(Yii::app()->language, 'userID'),
+                    'userName' => Yii::t(Yii::app()->language, 'userName'),
+                    'firstName' => Yii::t(Yii::app()->language, 'firstName'),
+                    'lastName' => Yii::t(Yii::app()->language, 'lastName'),
+                    'emailAddress' => Yii::t(Yii::app()->language, 'email'),
+                    'phoneNumber' => Yii::t(Yii::app()->language, 'phoneNumber'),
         ), parent::attributeLabels());
     }
 
