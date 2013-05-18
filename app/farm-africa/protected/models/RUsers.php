@@ -12,8 +12,6 @@ class RUsers extends GenericActiveResource {
      * gender etc.
      */
 
-    public $id;
-    public $primaryKey;
 
     public static function model($className = __CLASS__) {
         return parent::model($className);

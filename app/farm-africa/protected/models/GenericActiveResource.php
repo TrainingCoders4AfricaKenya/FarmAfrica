@@ -7,7 +7,10 @@
  * @author muya
  */
 class GenericActiveResource extends EActiveResource {
-
+    
+    
+    public $id;
+    public $primaryKey;
     /**
      * defines properties for the resource
      * @return array
@@ -72,7 +75,7 @@ class GenericActiveResource extends EActiveResource {
             Utils::log('DEBUG', 'NEW RESOURCE');
             //if this is a new record, set createdBy, dateCreated, modifiedBy 
             //(dateModified is auto in db)
-            $this->status = 1;
+            $this->status = StatCodes::ES_ACTIVE;
             $this->createdBy = Yii::app()->user->userID;
             $this->dateCreated = Utils::now();
             $this->modifiedBy = Yii::app()->user->userID;

@@ -60,16 +60,6 @@ class UsersController extends Controller {
     public function actionCreate() {
         $model = new RUsers();
 
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-//        if (isset($_POST['RUsers'])) {
-//            $model->attributes = $_POST['RUsers'];
-//            if ($model->save()) {
-//                $this->redirect(array('view', 'id' => $model->userID));
-//            }
-//        }
-//        die();
-
         if (isset($_POST['RUsers'])) {
             Utils::log('INFO', 'POST REQUEST: '.CJSON::encode($_POST), __CLASS__, __FUNCTION__, __LINE__);
             $model->attributes = $_POST['RUsers'];
@@ -78,6 +68,7 @@ class UsersController extends Controller {
             try {
                 $saveOK = $model->save();
                 if ($saveOK) {
+                    Utils::log('INFO', 'SAVE  OK');
                     $this->redirect(array('view', 'id' => $model->userID));
                 } else {
                     Utils::log('INFO', 'SAVE NOT OK'.CJSON::encode($model->getErrors()));
@@ -88,7 +79,9 @@ class UsersController extends Controller {
                 //an error occurred while doing processing
                 $modelErrors = array();
                 $errorMsg = $resourceExc->getMessage();
-                $modelErrors = (array)CJSON::decode($errorMsg);
+                $modelErrors = (array)  CJSON::decode($errorMsg);
+                $modelErrors = (isset($modelErrors['DATA'])) ? $modelErrors['DATA'] : null;
+                Utils::log('DEBUG', 'MODEL ERRORS CONTENT: '.Utils::printArray($modelErrors));
                 if($modelErrors == null || empty($modelErrors) || !isset($modelErrors['modelErrors'])){
                     //error that occurred wasn't model-related
                     Utils::log('ERROR', 'NON-MODEL ERROR OCCURRED WHILE TRYING TO CREATE USER | '
