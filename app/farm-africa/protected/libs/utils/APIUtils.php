@@ -6,7 +6,13 @@
  * @author muya
  */
 class APIUtils {
-
+    
+    /**
+     * @var array Holds the response that the core API functions will return
+     */
+    public static $modelActionRespose = array(); 
+    
+    
     /**
      * this function loops through model errors ($model->errors), and packages 
      * them into an array (PHP or JSON) that can be returned by the API
@@ -16,12 +22,12 @@ class APIUtils {
      */
     public static function packageModelErrors($model, $returnType = 'json') {
         $modelErrors = array();
-        if (!isset($model->errors)) {
+        if (!$model->hasErrors()) {
             //model has no errors, return empty array
             return Utils::formatArray($modelErrors, $returnType);
         }
         //model has errors, loop through them and add them to modelErrors
-        foreach ($model->errors as $attribute => $attr_errors) {
+        foreach ($model->getErrors() as $attribute => $attr_errors) {
             $modelErrors['modelErrors'][$attribute] = $attr_errors;
         }
         Utils::log('INFO', 'MODEL ERRORS PACKAGED: '.CJSON::encode($modelErrors), __CLASS__, __FUNCTION__, __LINE__);
@@ -33,15 +39,12 @@ class APIUtils {
     /**
      * this function handles the <b>list</b> functionality for our models
      * basically, it does a findAll() for the method
-     * @param type $modelName
+     * @param string $modelName
      * @return array The response from the model action
      */
     public static function listModel($modelName, $attributes = null){
         Utils::log('INFO', 'ABOUT TO FETCH LIST MODEL', __CLASS__, __FUNCTION__, __LINE__);
-        /*
-         * standardize model name, and try fetch the model
-         */
-        $modelActionRespose = array();
+        
         $className = Utils::parseClassName($modelName);
         
         if(!class_exists($className) || is_a('CActiveRecord', $className)){
@@ -57,7 +60,10 @@ class APIUtils {
             return $modelActionRespose;
         }
         $modelRecords = $model->findAll();
-        if(!$modelRecords){
+        if(is_array($modelRecords) && empty($modelRecords)){
+            Utils::log('INFO', 'NO RECORDS FOUND | '.CJSON::encode($modelActionRespose), __CLASS__, __FUNCTION__, __LINE__);
+        }
+        else if(!$modelRecords){
             $modelActionRespose = Utils::formatResponse(null, StatCodes::FAILED_CODE, StatCodes::FAILED_CODE, Yii::t(Yii::app()->language, 'generalError'));
             Utils::log('ERROR', 'AN ERROR OCCURRED WHILE TRYING TO FETCH MODEL RECORDS | '.CJSON::encode($modelActionRespose), __CLASS__, __FUNCTION__, __LINE__);
             return $modelActionRespose;
@@ -79,7 +85,63 @@ class APIUtils {
                         array('{className}' => $className)));
         return $modelActionRespose;
     }
-
+    
+    /**
+     * this function handles the <b>create</b> functionality for our models
+     * @param string $modelName
+     * @param array $attributes
+     */
+    public static function createModel($modelName, $attributes = array()){
+        Utils::log('INFO', 'ABOUT TO CREATE MODEL', __CLASS__, __FUNCTION__, __LINE__);
+        
+        $className = Utils::parseClassName($modelName);
+        
+        if(!class_exists($className) || is_a('CActiveRecord', $className)){
+            //invalid model provided
+            $modelActionRespose = Utils::formatResponse(null, StatCodes::REQUESTED_MODEL_NOT_EXIST_CODE, StatCodes::FAILED_CODE, StatCodes::REQUESTED_MODEL_NOT_EXIST_DESC);
+            Utils::log('ERROR', 'REQUESTED MODEL DOES NOT EXIST | '.CJSON::encode($modelActionRespose), __CLASS__, __FUNCTION__, __LINE__);
+            return $modelActionRespose;
+        }
+        $model = new $className();
+        if(!$model){
+            $modelActionRespose = Utils::formatResponse(null, StatCodes::FAILED_CODE, StatCodes::FAILED_CODE, Yii::t(Yii::app()->language, 'generalError'));
+            Utils::log('ERROR', 'AN ERROR OCCURRED WHILE TRYING TO INITIALIZE THE MODEL | '.CJSON::encode($modelActionRespose), __CLASS__, __FUNCTION__, __LINE__);
+            return $modelActionRespose;
+        }
+        
+        //load attributes to model
+        $model = self::loadModelAttributes($model, $attributes);
+        
+        //try to save model
+        $saveResponse = $model->modelAction(GenericAR::CREATE);
+        if (!$saveResponse['STATUS']) {
+            //an error occurred during the save
+            Utils::log('ERROR', 'AN ERROR OCCURRED WHILE SAVING MODEL |  ' . CJSON::encode($saveResponse), __CLASS__, __FUNCTION__, __LINE__, false);
+            $modelActionResposeData = APIUtils::packageModelErrors($model, 'array');
+            $modelActionRespose = Utils::formatResponse($modelActionResposeData, StatCodes::MODEL_ERROR_DURING_CREATE_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_ERROR_DURING_CREATE_DESC);
+        } else {
+            //save was ok.
+            Utils::log('INFO', $className.' MODEL CREATED SUCCESSFULLY', __CLASS__, __FUNCTION__, __LINE__);
+            $modelActionResposeData = (isset($saveResponse['DATA'])) ? $saveResponse['DATA'] : null;
+            $modelActionRespose = Utils::formatResponse($modelActionResposeData, StatCodes::MODEL_CREATED_SUCCESSFULLY_CODE, StatCodes::SUCCESS_CODE, StatCodes::MODEL_CREATED_SUCCESSFULLY_CODE);
+        }
+        return $modelActionRespose;
+    }
+    
+    /**
+     * function to assign a model attributes to the model
+     * @param CModel $model the model to be loaded
+     * @param array $attributes key value pairs of attributes
+     * @return CModel $model the model with it's attributes loaded
+     */
+    private static function loadModelAttributes($model, $attributes){
+        foreach ($attributes as $var => $value) {
+            if ($model->hasAttribute($var)) {
+                $model->$var = $value;
+            } 
+        }
+        return $model;
+    }
 }
 
 ?>

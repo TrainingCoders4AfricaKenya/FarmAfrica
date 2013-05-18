@@ -25,8 +25,19 @@ class UserIdentity extends CUserIdentity {
             $this->errorCode = self::ERROR_USERNAME_INVALID;
         elseif ($users[$this->username] !== $this->password)
             $this->errorCode = self::ERROR_PASSWORD_INVALID;
-        else
+        else{
             $this->errorCode = self::ERROR_NONE;
+            $userCount = 1;
+            foreach ($users as $key => $value) {
+                if($this->username == $key){
+                    Yii::app()->user->setState('userID', $userCount);
+                    break;
+                }
+                $userCount++;
+            }
+            
+        }
+            
         return !$this->errorCode;
     }
 

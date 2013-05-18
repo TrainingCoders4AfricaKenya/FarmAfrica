@@ -19,10 +19,16 @@ class StatCodes {
     /* API STATUS CODES */
     const REQUESTED_MODEL_NOT_EXIST_CODE = 200;
     const MODEL_MISSING_CODE = 201;
+    const MODEL_ATTRIBUTES_MISSING_CODE = 202;
+    const MODEL_ERROR_DURING_CREATE_CODE = 203;
+    const MODEL_CREATED_SUCCESSFULLY_CODE = 204;
     
     /* API STATUS DESCRIPTIONS */
     const MODEL_MISSING_DESC = 'Model is missing from the API request';
     const REQUESTED_MODEL_NOT_EXIST_DESC = 'The requested model does not exist';
+    const MODEL_ATTRIBUTES_MISSING_DESC = 'Model attributes not provided';
+    const MODEL_ERROR_DURING_CREATE_DESC = 'Model error occurred during create';
+    const MODEL_CREATED_SUCCESSFULLY_DESC = 'Model created successfully';
 }
 
 ?>
