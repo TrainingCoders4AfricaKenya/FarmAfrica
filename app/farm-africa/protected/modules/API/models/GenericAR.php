@@ -65,7 +65,6 @@ class GenericAR extends CActiveRecord {
             default:
                 break;
         }
-        //set any errors if needed
         $modelActionResponse['STATUS'] = $actionResponse['STATUS'];
         $modelActionResponse['DATA'] = $actionResponse['DATA'];
         $modelActionResponse['DESCRIPTION'] = $actionResponse['REASON'];

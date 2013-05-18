@@ -144,6 +144,54 @@ class APIController extends Controller {
         }
     }
     
+    /**
+     * function to get a specific model
+     */
+    public function actionView() {
+        Utils::log('INFO', 'ACTION VIEW INVOKED | GET CONTENTS: '. CJSON::encode($_GET), __CLASS__, __FUNCTION__, __LINE__);
+        
+        //parse to get which model is required
+        $model = (isset($_GET['model'])) ? $_GET['model'] : null;
+        $model = trim($model);
+        
+        if(is_null($model) || $model == ''){
+            //model not provided
+            $response = Utils::formatResponse(null, StatCodes::MODEL_MISSING_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_MISSING_DESC);
+            Utils::log('ERROR', 'MODEL NOT PROVIDED IN actionList:  | '.CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
+            return Utils::formatArray($response);
+        }
+        Utils::log('INFO', 'MODEL FOUND: '.$model, __CLASS__, __FUNCTION__, __LINE__);
+        
+        if(!isset($_GET['id']) || $_GET['id'] == ''){
+            //model attributes not provided
+            $response = Utils::formatResponse(null, StatCodes::MODEL_ATTRIBUTES_MISSING_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_ATTRIBUTES_MISSING_DESC);
+            Utils::log('ERROR', 'MODEL ATTRIBUTES NOT PROVIDED IN actionView:  | '.CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
+            return Utils::formatArray($response);
+        }
+        $id = $_GET['id'];
+        Utils::log('DEBUG', 'WILL FETCH MODEL ID: '.$id, __CLASS__, __FUNCTION__, __LINE__);
+        $viewActionResponse = APIUtils::viewModel($model, $id);
+        
+        Utils::log('INFO', 'RESPONSE FROM viewModel ACTION: '.CJSON::encode($viewActionResponse), __CLASS__, __FUNCTION__, __LINE__);
+        
+        //parse the response and determine appropriate action
+        
+        //use STATUS_TYPE to determine success or failure
+        if((!$viewActionResponse || !isset($viewActionResponse['STATUS_TYPE']) 
+                || $viewActionResponse['STATUS_TYPE'] != StatCodes::SUCCESS_CODE)
+                && ($viewActionResponse['STATUS_CODE'] != StatCodes::RECORD_NOT_EXIST_CODE)){
+            Utils::log('INFO', 'A SERVER ERROR OCCURRED ', __CLASS__, __FUNCTION__, __LINE__);
+            //this was a server error
+            $this->_sendResponse(500, $viewActionResponse);
+        }
+        else{
+            //everything was ok
+            Utils::log('INFO', 'view REQUEST WAS OK', __CLASS__, __FUNCTION__, __LINE__);
+            $this->_sendResponse(200, $viewActionResponse['DATA'][$model]);
+        }
+        Yii::app()->end();
+    }
+    
     private function _sendResponse($status = 200, $body = '', $content_type = null) {
         if($content_type == null){
             $content_type = 'application/json';

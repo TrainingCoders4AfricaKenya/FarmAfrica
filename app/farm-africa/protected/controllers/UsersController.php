@@ -192,7 +192,15 @@ class UsersController extends Controller {
      * @throws CHttpException
      */
     public function loadModel($id) {
-        $model = RUsers::model()->findById($id);
+        try {
+            $model = RUsers::model()->findById($id);
+        } catch (Exception $exc) {
+            Utils::log('EXCEPTION', 'AN Exception WAS THROWN WHILE FETCHING MODEL | CODE: '
+                    .$exc->getCode(). ' | MESSAGE: '.$exc->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
+            throw new CHttpException(404, 'The requested page does not exist.');
+        }
+
+        
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;

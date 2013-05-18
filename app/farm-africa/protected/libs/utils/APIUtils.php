@@ -128,6 +128,41 @@ class APIUtils {
         return $modelActionRespose;
     }
     
+    public static function viewModel($modelName, $id){
+        Utils::log('INFO', 'ABOUT TO FETCH LIST MODEL | modelName: '.$modelName.' | id: '.$id, __CLASS__, __FUNCTION__, __LINE__);
+        
+        $className = Utils::parseClassName($modelName);
+        
+        if(!class_exists($className) || is_a('CActiveRecord', $className)){
+            //invalid model provided
+            $modelActionRespose = Utils::formatResponse(null, StatCodes::REQUESTED_MODEL_NOT_EXIST_CODE, StatCodes::FAILED_CODE, StatCodes::REQUESTED_MODEL_NOT_EXIST_DESC);
+            Utils::log('ERROR', 'REQUESTED MODEL DOES NOT EXIST | '.CJSON::encode($modelActionRespose), __CLASS__, __FUNCTION__, __LINE__);
+            return $modelActionRespose;
+        }
+        
+        $model = new $className();
+        if(!$model){
+            $modelActionRespose = Utils::formatResponse(null, StatCodes::FAILED_CODE, StatCodes::FAILED_CODE, Yii::t(Yii::app()->language, 'generalError'));
+            Utils::log('ERROR', 'AN ERROR OCCURRED WHILE TRYING TO INITIALIZE THE MODEL | '.CJSON::encode($modelActionRespose), __CLASS__, __FUNCTION__, __LINE__);
+            return $modelActionRespose;
+        }
+        $modelRecord = $model->findByPk($id);
+        
+        if(!$modelRecord){
+            $modelActionRespose = Utils::formatResponse(null, StatCodes::RECORD_NOT_EXIST_CODE, StatCodes::FAILED_CODE, StatCodes::RECORD_NOT_EXIST_DESC);
+            Utils::log('ERROR', 'AN ERROR OCCURRED WHILE TRYING TO FETCH MODEL RECORDS | '.CJSON::encode($modelActionRespose), __CLASS__, __FUNCTION__, __LINE__);
+            return $modelActionRespose;
+        }
+        Utils::log('INFO', 'REQUESTED RECORD FOUND', __CLASS__, __FUNCTION__, __LINE__);
+        $modelActionResponseData = array();
+        $modelActionResponseData[$modelName] = $modelRecord;
+        $modelActionRespose = Utils::formatResponse($modelActionResponseData, 
+                StatCodes::SUCCESS_CODE, StatCodes::SUCCESS_CODE, Yii::t(
+                        Yii::app()->language, 'successfullyFetched{className}Records', 
+                        array('{className}' => $className)));
+        return $modelActionRespose;
+    }
+    
     /**
      * function to assign a model attributes to the model
      * @param CModel $model the model to be loaded
