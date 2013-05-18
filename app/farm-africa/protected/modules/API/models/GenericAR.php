@@ -65,7 +65,7 @@ class GenericAR extends CActiveRecord {
             default:
                 break;
         }
-        
+        //set any errors if needed
         $modelActionResponse['STATUS'] = $actionResponse['STATUS'];
         $modelActionResponse['DATA'] = $actionResponse['DATA'];
         $modelActionResponse['DESCRIPTION'] = $actionResponse['REASON'];
@@ -87,12 +87,15 @@ class GenericAR extends CActiveRecord {
         $this->status = StatCodes::ES_ACTIVE;
 
         try {
+            $actionResponse = array();
             $actionResponse['STATUS'] = $this->save();
+            
             if (!$actionResponse['STATUS']) {
                 //save failed
-                Utils::log('ERROR', 'AN ERROR OCCURRED WHILE TRYING TO SAVE THE MODEL', __CLASS__, __FUNCTION__, __LINE__);
-                $actionResponse['ERROR'] = $this->getErrors();
+                $actionResponse['DATA']['ERROR'] = $this->getErrors();
                 $actionResponse['REASON'] = Yii::t(Yii::app()->language, 'failedToCreateThe{model}Record', array('{model}' => ucfirst($this->tableName())));
+                Utils::log('ERROR', 'AN ERROR OCCURRED WHILE TRYING TO SAVE THE MODEL'.CJSON::encode($actionResponse), __CLASS__, __FUNCTION__, __LINE__);
+                
             } else {
                 //save was ok
                 Utils::log('INFO', 'MODEL WAS SAVED SUCCESSFULLY', __CLASS__, __FUNCTION__, __LINE__);
@@ -102,18 +105,18 @@ class GenericAR extends CActiveRecord {
         } catch (CDbException $dbExc) {
             Utils::log('EXCEPTION', 'A CDbException OCCURRED WHILE TRYING TO SAVE THE MODEL | '.CJSON::encode($dbExc) , __CLASS__, __FUNCTION__, __LINE__);
             $actionResponse['STATUS'] = false;
-            $actionResponse['ERROR'] = $dbExc;
+            $actionResponse['DATA']['ERROR'] = $dbExc;
 
             if ($dbExc->getCode() == 23000) {
                 //duplicate record/field error
-                $actionResponse['REASON'] = Yii::t(Yii::app()->language, 'sorryTheOperationCanNotBePerformedSinceASimilarEntryAlreadyExistsInTheSystem');
+                $actionResponse['REASON'] = Yii::t(Yii::app()->language, 'sorryTheOperationCannotBePerformedSinceASimilarEntryAlreadyExistsInTheSystem');
             } else {
                 $actionResponse['REASON'] = Yii::t(Yii::app()->language, 'anErrorOccurredWhileCreatingThe{model}Record', array('{model}' => ucfirst($this->tableName())));
             }
         } catch (Exception $exc) {
             Utils::log('EXCEPTION', 'A Exception OCCURRED WHILE TRYING TO SAVE THE MODEL | '.CJSON::encode($exc) , __CLASS__, __FUNCTION__, __LINE__);
             $actionResponse['STATUS'] = false;
-            $actionResponse['ERROR'] = $dbExc;
+            $actionResponse['DATA']['ERROR'] = $dbExc;
             $actionResponse['REASON'] = Yii::t(Yii::app()->language, 'anErrorOccurredWhileCreatingThe{model}Record', array('{model}' => ucfirst($this->tableName())));
         }
         $actionResponse['DATA']['model'] = $this;

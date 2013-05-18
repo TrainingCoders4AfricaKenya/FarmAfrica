@@ -31,46 +31,116 @@ class APIController extends Controller {
         //parse the response and determine appropriate action
         
         //use STATUS_TYPE to determine success or failure
-        if(!$listActionResponse || !isset($listActionResponse['STATUS_TYPE'])){
+        if(!$listActionResponse || !isset($listActionResponse['STATUS_TYPE']) || $listActionResponse['STATUS_TYPE'] != StatCodes::SUCCESS_CODE){
             Utils::log('INFO', 'A SERVER ERROR OCCURRED ', __CLASS__, __FUNCTION__, __LINE__);
             //this was a server error
             $this->_sendResponse(500, $listActionResponse);
         }
         else{
             //everything was ok
-            Utils::log('INFO', 'REQUEST WAS OK', __CLASS__, __FUNCTION__, __LINE__);
+            Utils::log('INFO', 'list REQUEST WAS OK', __CLASS__, __FUNCTION__, __LINE__);
             $this->_sendResponse(200, $listActionResponse['DATA'][$model]);
         }
         Yii::app()->end();
+    }
+    
+    /**
+     * function to create a new model
+     */
+    public function actionCreate(){
+        Utils::log('INFO', 'ACTION CREATE INVOKED ', __CLASS__, __FUNCTION__, __LINE__);
         
-        //get the respective model instance
+        //parse to get which model is required
+        $model = (isset($_GET['model'])) ? $_GET['model'] : null;
+        $model = trim($model);
+        
+        if(is_null($model) || $model == ''){
+            //model not provided
+            $response = Utils::formatResponse(null, StatCodes::MODEL_MISSING_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_MISSING_DESC);
+            Utils::log('ERROR', 'MODEL NOT PROVIDED IN actionCreate:  | '.CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
+            return Utils::formatArray($response);
+        }
+        Utils::log('INFO', 'MODEL FOUND: '.$model, __CLASS__, __FUNCTION__, __LINE__);
+        
+        //extract attributes from POST
+        if(!isset($_POST) || empty($_POST)){
+            //model attributes not provided
+            $response = Utils::formatResponse(null, StatCodes::MODEL_ATTRIBUTES_MISSING_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_ATTRIBUTES_MISSING_DESC);
+            Utils::log('ERROR', 'MODEL ATTRIBUTES NOT PROVIDED IN actionCreate:  | '.CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
+            return Utils::formatArray($response);
+        }
+        $attributes = $_POST;
+        
+        $createActionResponse = APIUtils::createModel($model, $attributes);
+        
+        //use STATUS_TYPE to determine success or failure
+        if(!$createActionResponse || !isset($createActionResponse['STATUS_TYPE']) || $createActionResponse['STATUS_TYPE'] != StatCodes::SUCCESS_CODE){
+            Utils::log('INFO', 'A SERVER ERROR OCCURRED ON create REQUEST', __CLASS__, __FUNCTION__, __LINE__);
+            //this was a server error
+            $this->_sendResponse(500, $createActionResponse);
+        }
+        else{
+            //everything was ok
+            Utils::log('INFO', 'create REQUEST WAS OK', __CLASS__, __FUNCTION__, __LINE__);
+            $this->_sendResponse(200, $createActionResponse['DATA']['model']);
+        }
+        
+        Yii::app()->end();
+        
+        Utils::log('INFO', 'RESPONSE FROM listModel ACTION: '.CJSON::encode($createActionResponse), __CLASS__, __FUNCTION__, __LINE__);
+        
+        //parse the response and determine appropriate action
+        
+        //use STATUS_TYPE to determine success or failure
+        if(!$createActionResponse || !isset($createActionResponse['STATUS_TYPE']) || $createActionResponse['STATUS_TYPE'] != StatCodes::SUCCESS_CODE){
+            Utils::log('INFO', 'A SERVER ERROR OCCURRED ', __CLASS__, __FUNCTION__, __LINE__);
+            //this was a server error
+            $this->_sendResponse(500, $createActionResponse);
+        }
+        else{
+            //everything was ok
+            Utils::log('INFO', 'list REQUEST WAS OK', __CLASS__, __FUNCTION__, __LINE__);
+            $this->_sendResponse(200, $createActionResponse['DATA'][$model]);
+        }
+        Yii::app()->end();
+        
+        Utils::log('DEBUG', 'REQUEST: ' . CJSON::encode($_REQUEST), __CLASS__, __FUNCTION__, __LINE__, false);
         switch ($_GET['model']) {
             case 'users':
-                $models = Users::model()->findAll();
+                Utils::log('DEBUG', 'GET REQUEST: ' . CJSON::encode($_GET), __CLASS__, __FUNCTION__, __LINE__, false);
+                $model = new Users();
                 break;
 
             default:
                 //model not implemented error
-                $this->_sendResponse(501, 'Error: Mode list is not implemented for model '.$_GET['model']);
-                $this->_sendResponse(501, sprintf('Error: Mode <b>list</b> is not implemented for model <b>%s</b>', $_GET['model']));
+                $this->_sendResponse(501, sprintf('Error: Mode <b>create</b> is not implemented for model <b>%s</b>', $_GET['model']));
                 Yii::app()->end();
                 break;
         }
-        
-        if (empty($models)) {
-            Utils::log('INFO', 'No users found', __CLASS__, __FUNCTION__, __LINE__, false);
-        
-            //no results found
-            $this->_sendResponse(200, sprintf('No items found for model <b>%s</b>', $_GET['model']));
-        } else {
-            Utils::log('INFO', 'Users found', __CLASS__, __FUNCTION__, __LINE__, false);
-            //prepare response
-            $rows = array();
-            foreach ($models as $model) {
-                $rows[] = $model->attributes;
+        //try to assign POST values to attributes
+        if(isset($_POST)){
+            Utils::log('DEBUG', 'POST REQUEST: ' . CJSON::encode($_POST), __CLASS__, __FUNCTION__, __LINE__, false);
+        }
+        foreach ($_POST as $var => $value) {
+            Utils::log('DEBUG', 'var: ' . $var . ' | value: ' . $value, __CLASS__, __FUNCTION__, __LINE__, false);
+            //check if model has this attribute
+            if ($model->hasAttribute($var)) {
+                $model->$var = $value;
+            } else {
+                $this->_sendResponse(500, sprintf('Parameter <b>%s</b> is not allowed for model <b>%s</b>', $var, $_GET['model']));
             }
-            //send response
-            $this->_sendResponse(200, CJSON::encode($rows));
+        }
+
+        //try to save model
+        $saveResponse = $model->modelAction(GenericAR::CREATE);
+        if (!$saveResponse['STATUS']) {
+            Utils::log('INFO', 'AN ERROR OCCURRED WHILE SAVING MODEL |  ' . CJSON::encode($saveResponse), __CLASS__, __FUNCTION__, __LINE__, false);
+            Utils::log('INFO', 'THE MODEL |  ' . CJSON::encode($model), __CLASS__, __FUNCTION__, __LINE__, false);
+            // Errors occurred
+            $msg = APIUtils::packageModelErrors($model->getErrors());
+            $this->_sendResponse(500, $msg);
+        } else {
+            $this->_sendResponse(200, CJSON::encode($model));
         }
     }
     
