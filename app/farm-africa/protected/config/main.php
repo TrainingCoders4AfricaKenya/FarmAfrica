@@ -45,8 +45,8 @@ $base_config = array(
             'rules' => array(
                 // REST patterns
                 array(
-                    'API/TestRest/list',
-                    'pattern' => 'API/TestRest/<model:\w+>',
+                    'API/API/list',
+                    'pattern' => 'API/API/<model:\w+>',
                     'verb' => 'GET'
                 ),
                 array(
@@ -65,8 +65,8 @@ $base_config = array(
                     'verb' => 'DELETE'
                 ),
                 array(
-                    'API/TestRest/create',
-                    'pattern' => 'API/TestRest/<model:\w+>',
+                    'API/API/create',
+                    'pattern' => 'API/API/<model:\w+>',
                     'verb' => 'POST'
                 ),
                 // Other controllers
@@ -105,7 +105,7 @@ $base_config = array(
                 array(
                     'class' => 'CFileLogRoute',
                     'levels' => 'error, warning, trace',
-                    'enabled' => true,
+                    'enabled' => false,
                     'logFile' => 'YII.log',
                     'logPath' => '/var/log/applications/FarmAfrica/UI/',
                     'maxFileSize' => '100000',
@@ -121,7 +121,7 @@ $base_config = array(
         //used by EActiveResource
         'activeresource' => array(
             'class' => 'EActiveResourceConnection',
-            'site' => 'http://127.0.0.1/FarmAfrica/index.php/API/TestRest',
+            'site' => 'http://127.0.0.1/FarmAfrica/index.php/API/API',
             'contentType' => 'application/json',
             'acceptType' => 'application/json',
 //            'idProperty' => 'id',
