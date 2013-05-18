@@ -487,7 +487,7 @@ abstract class EActiveResource extends CModel {
         else
             return false;
         }
-            
+        
     /**
      * Returns if the current resource is new.
      * @return boolean whether the resource is new and should be created when calling {@link save}.
