@@ -23,6 +23,9 @@ class StatCodes {
     const MODEL_ERROR_DURING_CREATE_CODE = 203;
     const MODEL_CREATED_SUCCESSFULLY_CODE = 204;
     const RECORD_NOT_EXIST_CODE = 205;
+    const UNABLE_TO_PARSE_MODEL_ATTR_CODE = 206;
+    const MODEL_ERROR_DURING_UPDATE_CODE = 207;
+    const MODEL_UPDATED_SUCCESSFULLY_CODE = 208;
     
     /* API STATUS DESCRIPTIONS */
     const MODEL_MISSING_DESC = 'Model is missing from the API request';
@@ -31,6 +34,9 @@ class StatCodes {
     const MODEL_ERROR_DURING_CREATE_DESC = 'Model error occurred during create';
     const MODEL_CREATED_SUCCESSFULLY_DESC = 'Model created successfully';
     const RECORD_NOT_EXIST_DESC = 'The requested record does not exist';
+    const UNABLE_TO_PARSE_MODEL_ATTR_DESC = 'Unable to parse model attributes';
+    const MODEL_ERROR_DURING_UPDATE_DESC = 'Model error occurred during update';
+    const MODEL_UPDATED_SUCCESSFULLY_DESC = 'Model updated successfully';
 }
 
 ?>

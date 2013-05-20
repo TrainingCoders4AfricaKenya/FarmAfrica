@@ -98,7 +98,14 @@ class UsersController extends Controller {
                 Yii::app()->end();
                 
             } catch (Exception $exc) {
-                echo $exc->getTraceAsString();
+                //error that occurred wasn't model-related
+                Utils::log('EXCEPTION', 'AN Exception OCCURRED WHILE TRYING TO CREATE USER | '
+                        .CJSON::encode($exc),__CLASS__, __FUNCTION__, __LINE__ );
+                Yii::app()->user->setFlash('error', Yii::t(Yii::app()->language, 'sorryAnErrorOccurredWhileCreatingThe{model}Record', array('{model}' => 'User')));
+                $this->render('create', array(
+                    'model' => $model,
+                ));
+                Yii::app()->end();
             }
         }
 
@@ -114,18 +121,67 @@ class UsersController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        
+        if (isset($_POST['RUsers'])) {
+            Utils::log('INFO', 'POST REQUEST: '.CJSON::encode($_POST), __CLASS__, __FUNCTION__, __LINE__);
+            $model->attributes = $_POST['RUsers'];
+            Utils::log('INFO', 'ATTRIBUTES: '.CJSON::encode($model->attributes), __CLASS__, __FUNCTION__, __LINE__);
+            
+            try {
+                $saveOK = $model->save();
+                if ($saveOK) {
+                    Utils::log('INFO', 'SAVE  OK');
+                    $this->redirect(array('view', 'id' => $model->userID));
+                } else {
+                    Utils::log('INFO', 'SAVE NOT OK'.CJSON::encode($model->getErrors()));
+                }
+            } catch (EActiveResourceRequestException $resourceExc) {
+                Utils::log('EXCEPTION', 'EActiveResourceRequestException ON UPDATE USER | CODE: '
+                        . $resourceExc->getCode() . ' | MESSAGE: ' . $resourceExc->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
+                //an error occurred while doing processing
+                $modelErrors = array();
+                $errorMsg = $resourceExc->getMessage();
+                $modelErrors = (array)  CJSON::decode($errorMsg);
+                $modelErrors = (isset($modelErrors['DATA'])) ? $modelErrors['DATA'] : null;
+                Utils::log('DEBUG', 'MODEL ERRORS CONTENT: '.Utils::printArray($modelErrors));
+                if($modelErrors == null || empty($modelErrors) || !isset($modelErrors['modelErrors'])){
+                    //error that occurred wasn't model-related
+                    Utils::log('ERROR', 'NON-MODEL ERROR OCCURRED WHILE TRYING TO UPDATE USER | '
+                            .CJSON::encode($errorMsg),__CLASS__, __FUNCTION__, __LINE__ );
+                    Yii::app()->user->setFlash('error', 'Error occurred');
+                }
+                else{
+                    $model->addErrors($modelErrors['modelErrors']);
+                }
+                
+                $this->render('update', array(
+                    'model' => $model,
+                ));
+                Yii::app()->end();
+                
+            } catch (Exception $exc) {
+                //error that occurred wasn't model-related
+                Utils::log('EXCEPTION', 'AN Exception OCCURRED WHILE TRYING TO CREATE USER | '
+                        .CJSON::encode($exc),__CLASS__, __FUNCTION__, __LINE__ );
+                Yii::app()->user->setFlash('error', Yii::t(Yii::app()->language, 'sorryAnErrorOccurredWhileCreatingThe{model}Record', array('{model}' => 'User')));
+                $this->render('update', array(
+                    'model' => $model,
+                ));
+                Yii::app()->end();
+            }
+        }
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        if (isset($_POST['RUsers'])) {
-            $model->attributes = $_POST['RUsers'];
-            if ($model->save()){
-//                die('SAVE OK');
-                $this->redirect(array('view', 'id' => $model->userID));
-            }
-                
-        }
+//        if (isset($_POST['RUsers'])) {
+//            $model->attributes = $_POST['RUsers'];
+//            if ($model->save()){
+////                die('SAVE OK');
+//                $this->redirect(array('view', 'id' => $model->userID));
+//            }
+//                
+//        }
         
         $this->render('update', array(
             'model' => $model,
