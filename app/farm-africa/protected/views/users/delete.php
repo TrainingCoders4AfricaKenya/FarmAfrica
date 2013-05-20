@@ -38,15 +38,18 @@ $this->menu=array(
 <div class="form">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'users-form',
+	'id'=>'rusers-form',
 	'enableAjaxValidation'=>false,
+        'method' => 'post',
 )); ?>
 <div class="row buttons">
     <p class="note">Fields with <span class="required">*</span> are required.</p>
 
     <?php echo $form->errorSummary($model); ?>
-
     
+    <?php echo $form->textArea($model, 'narration', array()); ?>
+
+    <br>
     <?php echo CHtml::submitButton('Delete'); ?>
 </div>
 
