@@ -128,6 +128,54 @@ class APIUtils {
         return $modelActionRespose;
     }
     
+    /**
+     * 
+     * @param type $modelName
+     * @param type $id
+     * @param type $attributes
+     * @return type
+     */
+    public static function updateModel($modelName, $id, $attributes){
+        Utils::log('INFO', 'ABOUT TO UPDATE MODEL | modelName: '.$modelName.' | id: '.$id, __CLASS__, __FUNCTION__, __LINE__);
+        
+        $className = Utils::parseClassName($modelName);
+        
+        if(!class_exists($className) || is_a('CActiveRecord', $className)){
+            //invalid model provided
+            $modelActionRespose = Utils::formatResponse(null, StatCodes::REQUESTED_MODEL_NOT_EXIST_CODE, StatCodes::FAILED_CODE, StatCodes::REQUESTED_MODEL_NOT_EXIST_DESC);
+            Utils::log('ERROR', 'REQUESTED MODEL DOES NOT EXIST | '.CJSON::encode($modelActionRespose), __CLASS__, __FUNCTION__, __LINE__);
+            return $modelActionRespose;
+        }
+        
+        $model = new $className();
+        
+        $modelRecord = $model->findByPk($id);
+        
+        if(!$modelRecord){
+            $modelActionRespose = Utils::formatResponse(null, StatCodes::RECORD_NOT_EXIST_CODE, StatCodes::FAILED_CODE, StatCodes::RECORD_NOT_EXIST_DESC);
+            Utils::log('ERROR', 'AN ERROR OCCURRED WHILE TRYING TO FETCH MODEL RECORDS | '.CJSON::encode($modelActionRespose), __CLASS__, __FUNCTION__, __LINE__);
+            return $modelActionRespose;
+        }
+        
+        //load attributes to model
+        $modelRecord = self::loadModelAttributes($modelRecord, $attributes);
+        
+        //try to save model
+        $saveResponse = $modelRecord->modelAction(GenericAR::UPDATE);
+        if (!$saveResponse['STATUS']) {
+            //an error occurred during the save
+            Utils::log('ERROR', 'AN ERROR OCCURRED WHILE UPDATING MODEL |  ' . CJSON::encode($saveResponse), __CLASS__, __FUNCTION__, __LINE__, false);
+            $modelActionResposeData = APIUtils::packageModelErrors($modelRecord, 'array');
+            $modelActionRespose = Utils::formatResponse($modelActionResposeData, StatCodes::MODEL_ERROR_DURING_UPDATE_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_ERROR_DURING_UPDATE_DESC);
+        } else {
+            //save was ok.
+            Utils::log('INFO', $className.' MODEL UPDATED SUCCESSFULLY', __CLASS__, __FUNCTION__, __LINE__);
+            $modelActionResposeData = (isset($saveResponse['DATA'])) ? $saveResponse['DATA'] : null;
+            $modelActionRespose = Utils::formatResponse($modelActionResposeData, StatCodes::MODEL_UPDATED_SUCCESSFULLY_CODE, StatCodes::SUCCESS_CODE, StatCodes::MODEL_UPDATED_SUCCESSFULLY_CODE);
+        }
+        return $modelActionRespose;
+    }
+    
     public static function viewModel($modelName, $id){
         Utils::log('INFO', 'ABOUT TO FETCH LIST MODEL | modelName: '.$modelName.' | id: '.$id, __CLASS__, __FUNCTION__, __LINE__);
         
