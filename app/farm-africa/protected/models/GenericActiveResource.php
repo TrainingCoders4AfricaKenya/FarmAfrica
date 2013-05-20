@@ -11,6 +11,7 @@ class GenericActiveResource extends EActiveResource {
     
     public $id;
     public $primaryKey;
+    public $narration;
     /**
      * defines properties for the resource
      * @return array
