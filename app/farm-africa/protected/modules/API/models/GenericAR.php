@@ -54,9 +54,10 @@ class GenericAR extends CActiveRecord {
         $modelActionResponse = array();
         switch ($action) {
             case self::CREATE:
-                $actionResponse = $this->create($override);
+                $actionResponse = $this->createModel($override);
                 break;
             case self::UPDATE:
+                $actionResponse = $this->updateModel($override);
                 break;
             case self::VIEW:
                 break;
@@ -65,20 +66,62 @@ class GenericAR extends CActiveRecord {
             default:
                 break;
         }
-        //set any errors if needed
         $modelActionResponse['STATUS'] = $actionResponse['STATUS'];
         $modelActionResponse['DATA'] = $actionResponse['DATA'];
         $modelActionResponse['DESCRIPTION'] = $actionResponse['REASON'];
         return $modelActionResponse;
     }
+    
+    public function updateModel($override = false){
+        Utils::log('INFO', 'ABOUT TO PERFORM ACTION UPDATE', __CLASS__, __FUNCTION__, __LINE__);
+        $actionResponse = array();
+        
+        $this->dateModified = Utils::now();
+        
+        try {
+            $actionResponse = array();
+            $actionResponse['STATUS'] = $this->save();
+            
+            if (!$actionResponse['STATUS']) {
+                //save failed
+                $actionResponse['DATA']['ERROR'] = $this->getErrors();
+                $actionResponse['REASON'] = Yii::t(Yii::app()->language, 'failedToUpdateThe{model}Record', array('{model}' => ucfirst($this->tableName())));
+                Utils::log('ERROR', 'AN ERROR OCCURRED WHILE TRYING TO SAVE THE MODEL'.CJSON::encode($actionResponse), __CLASS__, __FUNCTION__, __LINE__);
+                
+            } else {
+                //save was ok
+                Utils::log('INFO', 'MODEL WAS UPDATED SUCCESSFULLY', __CLASS__, __FUNCTION__, __LINE__);
+                $actionResponse['DATA']['PK'] = $this->primaryKey;
+                $actionResponse['REASON'] = Yii::t(Yii::app()->language, 'successfullyUpdated{model}Record', array('{model}' => ucfirst($this->tableName())));
+            }
+        } catch (CDbException $dbExc) {
+            Utils::log('EXCEPTION', 'A CDbException OCCURRED WHILE TRYING TO UPDATE THE MODEL | '.CJSON::encode($dbExc) , __CLASS__, __FUNCTION__, __LINE__);
+            $actionResponse['STATUS'] = false;
+            $actionResponse['DATA']['ERROR'] = $dbExc;
+
+            if ($dbExc->getCode() == 23000) {
+                //duplicate record/field error
+                $actionResponse['REASON'] = Yii::t(Yii::app()->language, 'sorryTheOperationCannotBePerformedSinceASimilarEntryAlreadyExistsInTheSystem');
+            } else {
+                $actionResponse['REASON'] = Yii::t(Yii::app()->language, 'anErrorOccurredWhileUpdatingThe{model}Record', array('{model}' => ucfirst($this->tableName())));
+            }
+        } catch (Exception $exc) {
+            Utils::log('EXCEPTION', 'A Exception OCCURRED WHILE TRYING TO UPDATE THE MODEL | '.CJSON::encode($exc) , __CLASS__, __FUNCTION__, __LINE__);
+            $actionResponse['STATUS'] = false;
+            $actionResponse['DATA']['ERROR'] = $dbExc;
+            $actionResponse['REASON'] = Yii::t(Yii::app()->language, 'anErrorOccurredWhileUpdatingThe{model}Record', array('{model}' => ucfirst($this->tableName())));
+        }
+        $actionResponse['DATA']['model'] = $this;
+        return $actionResponse;
+    }
 
     /**
-     * this function saves a model
+     * this function creates and saves a model
      * it will save default values for the model
      * @param GenericAR $model
      * @param boolean $override
      */
-    private function create($override = false) {
+    private function createModel($override = false) {
         Utils::log('INFO', 'ABOUT TO PERFORM ACTION CREATE', __CLASS__, __FUNCTION__, __LINE__);
         $actionResponse = array();
 //        $this->insertedBy = Yii::app()->user->userID;
