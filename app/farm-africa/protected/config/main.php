@@ -60,8 +60,8 @@ $base_config = array(
                     'verb' => 'PUT'
                 ),
                 array(
-                    'API/TestRest/delete',
-                    'pattern' => 'API/TestRest/<model:\w+>/<id:\d+>',
+                    'API/API/delete',
+                    'pattern' => 'API/API/<model:\w+>/<id:\d+>',
                     'verb' => 'DELETE'
                 ),
                 array(

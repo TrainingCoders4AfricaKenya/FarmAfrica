@@ -211,7 +211,7 @@ class APIController extends Controller {
         if (is_null($model) || $model == '') {
             //model not provided
             $response = Utils::formatResponse(null, StatCodes::MODEL_MISSING_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_MISSING_DESC);
-            Utils::log('ERROR', 'MODEL NOT PROVIDED IN actionList:  | ' . CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
+            Utils::log('ERROR', 'MODEL NOT PROVIDED IN actionView:  | ' . CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
             return Utils::formatArray($response);
         }
         Utils::log('INFO', 'MODEL FOUND: ' . $model, __CLASS__, __FUNCTION__, __LINE__);
@@ -243,6 +243,60 @@ class APIController extends Controller {
     }
     
     /**
+     * 
+     * @return type
+     */
+    public function actionDelete(){
+        Utils::log('INFO', 'ACTION DELETE INVOKED ', __CLASS__, __FUNCTION__, __LINE__);
+        
+        //parse to get which model is required
+        $model = (isset($_GET['model'])) ? $_GET['model'] : null;
+        $model = trim($model);
+
+        if (is_null($model) || $model == '') {
+            //model not provided
+            $response = Utils::formatResponse(null, StatCodes::MODEL_MISSING_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_MISSING_DESC);
+            Utils::log('ERROR', 'MODEL NOT PROVIDED IN actionDelete:  | ' . CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
+            return Utils::formatArray($response);
+        }
+        Utils::log('INFO', 'MODEL FOUND: ' . $model, __CLASS__, __FUNCTION__, __LINE__);
+        
+        if (is_null($model) || $model == '') {
+            //model not provided
+            $response = Utils::formatResponse(null, StatCodes::MODEL_MISSING_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_MISSING_DESC);
+            Utils::log('ERROR', 'MODEL NOT PROVIDED IN actionDelete:  | ' . CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
+            return Utils::formatArray($response);
+        }
+        Utils::log('INFO', 'MODEL FOUND: ' . $model, __CLASS__, __FUNCTION__, __LINE__);
+
+        if (!isset($_GET['id']) || $_GET['id'] == '') {
+            //model attributes not provided
+            $response = Utils::formatResponse(null, StatCodes::MODEL_ATTRIBUTES_MISSING_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_ATTRIBUTES_MISSING_DESC);
+            Utils::log('ERROR', 'MODEL ATTRIBUTES NOT PROVIDED IN actionDelete:  | ' . CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
+            return Utils::formatArray($response);
+        }
+        $id = $_GET['id'];
+        Utils::log('DEBUG', 'WILL FETCH MODEL ID: ' . $id, __CLASS__, __FUNCTION__, __LINE__);
+        
+        $deleteActionResponse = APIUtils::deleteModel($model, $id);
+
+        Utils::log('INFO', 'RESPONSE FROM deleteModel ACTION: ' . CJSON::encode($deleteActionResponse), __CLASS__, __FUNCTION__, __LINE__);
+
+        //parse the response and determine appropriate action
+        //use STATUS_TYPE to determine success or failure
+        if ((!$deleteActionResponse || !isset($deleteActionResponse['STATUS_TYPE']) || $deleteActionResponse['STATUS_TYPE'] != StatCodes::SUCCESS_CODE) && ($deleteActionResponse['STATUS_CODE'] != StatCodes::RECORD_NOT_EXIST_CODE)) {
+            Utils::log('INFO', 'A SERVER ERROR OCCURRED ', __CLASS__, __FUNCTION__, __LINE__);
+            //this was a server error
+            $this->_sendResponse(500, $deleteActionResponse);
+        } else {
+            //everything was ok
+            Utils::log('INFO', 'delete REQUEST WAS OK', __CLASS__, __FUNCTION__, __LINE__);
+            $this->_sendResponse(200, $deleteActionResponse['STATUS_DESCRIPTION']);
+        }
+        Yii::app()->end();
+    }
+
+        /**
      * function to send the response from the server
      * @param int $status
      * @param string $body

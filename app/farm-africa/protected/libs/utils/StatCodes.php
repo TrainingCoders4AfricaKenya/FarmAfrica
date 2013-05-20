@@ -26,6 +26,7 @@ class StatCodes {
     const UNABLE_TO_PARSE_MODEL_ATTR_CODE = 206;
     const MODEL_ERROR_DURING_UPDATE_CODE = 207;
     const MODEL_UPDATED_SUCCESSFULLY_CODE = 208;
+    const MODEL_ERROR_DURING_DELETE_CODE = 209;
     
     /* API STATUS DESCRIPTIONS */
     const MODEL_MISSING_DESC = 'Model is missing from the API request';
@@ -37,6 +38,7 @@ class StatCodes {
     const UNABLE_TO_PARSE_MODEL_ATTR_DESC = 'Unable to parse model attributes';
     const MODEL_ERROR_DURING_UPDATE_DESC = 'Model error occurred during update';
     const MODEL_UPDATED_SUCCESSFULLY_DESC = 'Model updated successfully';
+    const MODEL_ERROR_DURING_DELETE_DESC = 'Model error occurred during delete';
 }
 
 ?>

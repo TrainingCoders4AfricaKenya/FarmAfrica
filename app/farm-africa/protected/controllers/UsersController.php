@@ -134,6 +134,10 @@ class UsersController extends Controller {
                     $this->redirect(array('view', 'id' => $model->userID));
                 } else {
                     Utils::log('INFO', 'SAVE NOT OK'.CJSON::encode($model->getErrors()));
+                    $this->render('update', array(
+                        'model' => $model,
+                    ));
+                    Yii::app()->end();
                 }
             } catch (EActiveResourceRequestException $resourceExc) {
                 Utils::log('EXCEPTION', 'EActiveResourceRequestException ON UPDATE USER | CODE: '
@@ -161,9 +165,9 @@ class UsersController extends Controller {
                 
             } catch (Exception $exc) {
                 //error that occurred wasn't model-related
-                Utils::log('EXCEPTION', 'AN Exception OCCURRED WHILE TRYING TO CREATE USER | '
+                Utils::log('EXCEPTION', 'AN Exception OCCURRED WHILE TRYING TO UPDATE USER | '
                         .CJSON::encode($exc),__CLASS__, __FUNCTION__, __LINE__ );
-                Yii::app()->user->setFlash('error', Yii::t(Yii::app()->language, 'sorryAnErrorOccurredWhileCreatingThe{model}Record', array('{model}' => 'User')));
+                Yii::app()->user->setFlash('error', Yii::t(Yii::app()->language, 'sorryAnErrorOccurredWhileUpdatingThe{model}Record', array('{model}' => 'User')));
                 $this->render('update', array(
                     'model' => $model,
                 ));
@@ -173,15 +177,6 @@ class UsersController extends Controller {
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
-
-//        if (isset($_POST['RUsers'])) {
-//            $model->attributes = $_POST['RUsers'];
-//            if ($model->save()){
-////                die('SAVE OK');
-//                $this->redirect(array('view', 'id' => $model->userID));
-//            }
-//                
-//        }
         
         $this->render('update', array(
             'model' => $model,
@@ -196,16 +191,66 @@ class UsersController extends Controller {
      */
     public function actionDelete($id) {
         $model = $this->loadModel($id);
+        
+        Utils::log('DEBUG', 'REQUEST: '.CJSON::encode($_REQUEST));
 
-        if (isset($_POST['Users'])) {
-            $model->attributes = $_POST['Users'];
-            if ($model->save())
-                $this->redirect(array('view', 'id' => $model->userID));
+        if (isset($_POST['RUsers'])) {
+            Utils::log('INFO', 'POST REQUEST: '.CJSON::encode($_POST), __CLASS__, __FUNCTION__, __LINE__);
+            $model->attributes = $_POST['RUsers'];
+            Utils::log('INFO', 'ATTRIBUTES: '.CJSON::encode($model->attributes), __CLASS__, __FUNCTION__, __LINE__);
+            
+            try {
+                $deleteOK = $model->deleteById($id);
+                if ($deleteOK) {
+                    Utils::log('INFO', 'DELETE  OK');
+                    $this->redirect(array('admin'));
+                } else {
+                    Utils::log('INFO', 'DELETE NOT OK');
+                    $this->render('update', array(
+                        'model' => $model,
+                    ));
+                    Yii::app()->end();
+                }
+            } catch (EActiveResourceRequestException $resourceExc) {
+                Utils::log('EXCEPTION', 'EActiveResourceRequestException ON DELETE USER | CODE: '
+                        . $resourceExc->getCode() . ' | MESSAGE: ' . $resourceExc->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
+                //an error occurred while doing processing
+                $modelErrors = array();
+                $errorMsg = $resourceExc->getMessage();
+                $modelErrors = (array)  CJSON::decode($errorMsg);
+                $modelErrors = (isset($modelErrors['DATA'])) ? $modelErrors['DATA'] : null;
+                Utils::log('DEBUG', 'MODEL ERRORS CONTENT: '.Utils::printArray($modelErrors));
+                if($modelErrors == null || empty($modelErrors) || !isset($modelErrors['modelErrors'])){
+                    //error that occurred wasn't model-related
+                    Utils::log('ERROR', 'NON-MODEL ERROR OCCURRED WHILE TRYING TO UPDATE USER | '
+                            .CJSON::encode($errorMsg),__CLASS__, __FUNCTION__, __LINE__ );
+                    Yii::app()->user->setFlash('error', 'Error occurred');
+                }
+                else{
+                    $model->addErrors($modelErrors['modelErrors']);
+                }
+                
+                $this->render('delete', array(
+                    'model' => $model,
+                ));
+                Yii::app()->end();
+                
+            } catch (Exception $exc) {
+                //error that occurred wasn't model-related
+                Utils::log('EXCEPTION', 'AN Exception OCCURRED WHILE TRYING TO DELETE USER | '
+                        .CJSON::encode($exc),__CLASS__, __FUNCTION__, __LINE__ );
+                Yii::app()->user->setFlash('error', Yii::t(Yii::app()->language, 'sorryAnErrorOccurredWhileDeletingThe{model}Record', array('{model}' => 'User')));
+                $this->render('delete', array(
+                    'model' => $model,
+                ));
+                Yii::app()->end();
+            }
         }
 
         $this->render('delete', array(
             'model' => $model,
         ));
+        Yii::app()->end();
     }
 
     /**
