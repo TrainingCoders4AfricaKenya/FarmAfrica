@@ -50,13 +50,13 @@ $base_config = array(
                     'verb' => 'GET'
                 ),
                 array(
-                    'API/TestRest/view',
-                    'pattern' => 'API/TestRest/<model:\w+>/<id:\d+>',
+                    'API/API/view',
+                    'pattern' => 'API/API/<model:\w+>/<id:\d+>',
                     'verb' => 'GET'
                 ),
                 array(
-                    'API/TestRest/update',
-                    'pattern' => 'API/TestRest/<model:\w+>/<id:\d+>',
+                    'API/API/update',
+                    'pattern' => 'API/API/<model:\w+>/<id:\d+>',
                     'verb' => 'PUT'
                 ),
                 array(

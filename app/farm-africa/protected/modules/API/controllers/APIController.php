@@ -8,35 +8,34 @@
  * @author muya
  */
 class APIController extends Controller {
+
     /**
      * function to get all models
      */
     public function actionList() {
-        Utils::log('INFO', 'ACTION LIST INVOKED | GET CONTENTS: '.CJSON::encode($_GET), __CLASS__, __FUNCTION__, __LINE__, false);
-        
+        Utils::log('INFO', 'ACTION LIST INVOKED | GET CONTENTS: ' . CJSON::encode($_GET), __CLASS__, __FUNCTION__, __LINE__, false);
+
         //parse to get which model is required
         $model = (isset($_GET['model'])) ? $_GET['model'] : null;
         $model = trim($model);
-        
-        if(is_null($model) || $model == ''){
+
+        if (is_null($model) || $model == '') {
             //model not provided
             $response = Utils::formatResponse(null, StatCodes::MODEL_MISSING_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_MISSING_DESC);
-            Utils::log('ERROR', 'MODEL NOT PROVIDED IN actionList:  | '.CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
+            Utils::log('ERROR', 'MODEL NOT PROVIDED IN actionList:  | ' . CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
             return Utils::formatArray($response);
         }
-        Utils::log('INFO', 'MODEL FOUND: '.$model, __CLASS__, __FUNCTION__, __LINE__);
+        Utils::log('INFO', 'MODEL FOUND: ' . $model, __CLASS__, __FUNCTION__, __LINE__);
         $listActionResponse = APIUtils::listModel($model);
-        Utils::log('INFO', 'RESPONSE FROM listModel ACTION: '.CJSON::encode($listActionResponse), __CLASS__, __FUNCTION__, __LINE__);
-        
+        Utils::log('INFO', 'RESPONSE FROM listModel ACTION: ' . CJSON::encode($listActionResponse), __CLASS__, __FUNCTION__, __LINE__);
+
         //parse the response and determine appropriate action
-        
         //use STATUS_TYPE to determine success or failure
-        if(!$listActionResponse || !isset($listActionResponse['STATUS_TYPE']) || $listActionResponse['STATUS_TYPE'] != StatCodes::SUCCESS_CODE){
+        if (!$listActionResponse || !isset($listActionResponse['STATUS_TYPE']) || $listActionResponse['STATUS_TYPE'] != StatCodes::SUCCESS_CODE) {
             Utils::log('INFO', 'A SERVER ERROR OCCURRED ', __CLASS__, __FUNCTION__, __LINE__);
             //this was a server error
             $this->_sendResponse(500, $listActionResponse);
-        }
-        else{
+        } else {
             //everything was ok
             Utils::log('INFO', 'list REQUEST WAS OK', __CLASS__, __FUNCTION__, __LINE__);
             $this->_sendResponse(200, $listActionResponse['DATA'][$model]);
@@ -45,65 +44,120 @@ class APIController extends Controller {
     }
     
     /**
-     * function to create a new model
+     * function to update a given model
+     * @return type
      */
-    public function actionCreate(){
-        Utils::log('INFO', 'ACTION CREATE INVOKED ', __CLASS__, __FUNCTION__, __LINE__);
-        
+    public function actionUpdate() {
+        Utils::log('INFO', 'ACTION UPDATE INVOKED', __CLASS__, __FUNCTION__, __LINE__);
+
         //parse to get which model is required
         $model = (isset($_GET['model'])) ? $_GET['model'] : null;
         $model = trim($model);
-        
-        if(is_null($model) || $model == ''){
+
+        if (is_null($model) || $model == '') {
             //model not provided
             $response = Utils::formatResponse(null, StatCodes::MODEL_MISSING_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_MISSING_DESC);
-            Utils::log('ERROR', 'MODEL NOT PROVIDED IN actionCreate:  | '.CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
+            Utils::log('ERROR', 'MODEL NOT PROVIDED IN actionUpdate:  | ' . CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
             return Utils::formatArray($response);
         }
-        Utils::log('INFO', 'MODEL FOUND: '.$model, __CLASS__, __FUNCTION__, __LINE__);
-        
-        //extract attributes from POST
-        if(!isset($_POST) || empty($_POST)){
+
+        Utils::log('INFO', 'MODEL FOUND: ' . $model, __CLASS__, __FUNCTION__, __LINE__);
+
+        //parse the PUT parameters
+        $jsonAttr = file_get_contents('php://input');
+
+        if (!$jsonAttr) {
+            //file_get_contents returned false
+            $response = Utils::formatResponse(null, StatCodes::UNABLE_TO_PARSE_MODEL_ATTR_CODE, StatCodes::FAILED_CODE, StatCodes::UNABLE_TO_PARSE_MODEL_ATTR_DESC);
+            Utils::log('INFO', 'UNABLE TO PARSE UPDATE INFO | ' . CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
+        }
+
+        $attributes = (array) CJSON::decode($jsonAttr, true);  //true means use associative array
+
+        Utils::log('DEBUG', 'ATTRIBUTES TO UPDATE: ' . Utils::printArray($attributes), __CLASS__, __FUNCTION__, __LINE__, false);
+
+        if (!isset($_GET['id']) || $_GET['id'] == '') {
             //model attributes not provided
             $response = Utils::formatResponse(null, StatCodes::MODEL_ATTRIBUTES_MISSING_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_ATTRIBUTES_MISSING_DESC);
-            Utils::log('ERROR', 'MODEL ATTRIBUTES NOT PROVIDED IN actionCreate:  | '.CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
+            Utils::log('ERROR', 'MODEL ATTRIBUTES NOT PROVIDED IN actionUpdate:  | ' . CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
+            return Utils::formatArray($response);
+        }
+        $id = $_GET['id'];
+        Utils::log('DEBUG', 'WILL FETCH MODEL ID: ' . $id, __CLASS__, __FUNCTION__, __LINE__);
+
+        $updateActionResponse = APIUtils::updateModel($model, $id, $attributes);
+
+        //use STATUS_TYPE to determine success or failure
+        if (!$updateActionResponse || !isset($updateActionResponse['STATUS_TYPE']) || $updateActionResponse['STATUS_TYPE'] != StatCodes::SUCCESS_CODE) {
+            Utils::log('INFO', 'A SERVER ERROR OCCURRED ON update REQUEST', __CLASS__, __FUNCTION__, __LINE__);
+            //this was a server error
+            $this->_sendResponse(500, $updateActionResponse);
+        } else {
+            //everything was ok
+            Utils::log('INFO', 'update REQUEST WAS OK', __CLASS__, __FUNCTION__, __LINE__);
+            $this->_sendResponse(200, $updateActionResponse['DATA']['model']);
+        }
+
+        Yii::app()->end();
+    }
+
+    /**
+     * function to create a new model
+     */
+    public function actionCreate() {
+        Utils::log('INFO', 'ACTION CREATE INVOKED ', __CLASS__, __FUNCTION__, __LINE__);
+
+        //parse to get which model is required
+        $model = (isset($_GET['model'])) ? $_GET['model'] : null;
+        $model = trim($model);
+
+        if (is_null($model) || $model == '') {
+            //model not provided
+            $response = Utils::formatResponse(null, StatCodes::MODEL_MISSING_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_MISSING_DESC);
+            Utils::log('ERROR', 'MODEL NOT PROVIDED IN actionCreate:  | ' . CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
+            return Utils::formatArray($response);
+        }
+        Utils::log('INFO', 'MODEL FOUND: ' . $model, __CLASS__, __FUNCTION__, __LINE__);
+
+        //extract attributes from POST
+        if (!isset($_POST) || empty($_POST)) {
+            //model attributes not provided
+            $response = Utils::formatResponse(null, StatCodes::MODEL_ATTRIBUTES_MISSING_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_ATTRIBUTES_MISSING_DESC);
+            Utils::log('ERROR', 'MODEL ATTRIBUTES NOT PROVIDED IN actionCreate:  | ' . CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
             return Utils::formatArray($response);
         }
         $attributes = $_POST;
-        
+
         $createActionResponse = APIUtils::createModel($model, $attributes);
-        
+
         //use STATUS_TYPE to determine success or failure
-        if(!$createActionResponse || !isset($createActionResponse['STATUS_TYPE']) || $createActionResponse['STATUS_TYPE'] != StatCodes::SUCCESS_CODE){
+        if (!$createActionResponse || !isset($createActionResponse['STATUS_TYPE']) || $createActionResponse['STATUS_TYPE'] != StatCodes::SUCCESS_CODE) {
             Utils::log('INFO', 'A SERVER ERROR OCCURRED ON create REQUEST', __CLASS__, __FUNCTION__, __LINE__);
             //this was a server error
             $this->_sendResponse(500, $createActionResponse);
-        }
-        else{
+        } else {
             //everything was ok
             Utils::log('INFO', 'create REQUEST WAS OK', __CLASS__, __FUNCTION__, __LINE__);
             $this->_sendResponse(200, $createActionResponse['DATA']['model']);
         }
-        
+
         Yii::app()->end();
-        
-        Utils::log('INFO', 'RESPONSE FROM listModel ACTION: '.CJSON::encode($createActionResponse), __CLASS__, __FUNCTION__, __LINE__);
-        
+
+        Utils::log('INFO', 'RESPONSE FROM listModel ACTION: ' . CJSON::encode($createActionResponse), __CLASS__, __FUNCTION__, __LINE__);
+
         //parse the response and determine appropriate action
-        
         //use STATUS_TYPE to determine success or failure
-        if(!$createActionResponse || !isset($createActionResponse['STATUS_TYPE']) || $createActionResponse['STATUS_TYPE'] != StatCodes::SUCCESS_CODE){
+        if (!$createActionResponse || !isset($createActionResponse['STATUS_TYPE']) || $createActionResponse['STATUS_TYPE'] != StatCodes::SUCCESS_CODE) {
             Utils::log('INFO', 'A SERVER ERROR OCCURRED ', __CLASS__, __FUNCTION__, __LINE__);
             //this was a server error
             $this->_sendResponse(500, $createActionResponse);
-        }
-        else{
+        } else {
             //everything was ok
             Utils::log('INFO', 'list REQUEST WAS OK', __CLASS__, __FUNCTION__, __LINE__);
             $this->_sendResponse(200, $createActionResponse['DATA'][$model]);
         }
         Yii::app()->end();
-        
+
         Utils::log('DEBUG', 'REQUEST: ' . CJSON::encode($_REQUEST), __CLASS__, __FUNCTION__, __LINE__, false);
         switch ($_GET['model']) {
             case 'users':
@@ -118,7 +172,7 @@ class APIController extends Controller {
                 break;
         }
         //try to assign POST values to attributes
-        if(isset($_POST)){
+        if (isset($_POST)) {
             Utils::log('DEBUG', 'POST REQUEST: ' . CJSON::encode($_POST), __CLASS__, __FUNCTION__, __LINE__, false);
         }
         foreach ($_POST as $var => $value) {
@@ -143,9 +197,59 @@ class APIController extends Controller {
             $this->_sendResponse(200, CJSON::encode($model));
         }
     }
+
+    /**
+     * function to get a specific model
+     */
+    public function actionView() {
+        Utils::log('INFO', 'ACTION VIEW INVOKED | GET CONTENTS: ' . CJSON::encode($_GET), __CLASS__, __FUNCTION__, __LINE__);
+
+        //parse to get which model is required
+        $model = (isset($_GET['model'])) ? $_GET['model'] : null;
+        $model = trim($model);
+
+        if (is_null($model) || $model == '') {
+            //model not provided
+            $response = Utils::formatResponse(null, StatCodes::MODEL_MISSING_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_MISSING_DESC);
+            Utils::log('ERROR', 'MODEL NOT PROVIDED IN actionList:  | ' . CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
+            return Utils::formatArray($response);
+        }
+        Utils::log('INFO', 'MODEL FOUND: ' . $model, __CLASS__, __FUNCTION__, __LINE__);
+
+        if (!isset($_GET['id']) || $_GET['id'] == '') {
+            //model attributes not provided
+            $response = Utils::formatResponse(null, StatCodes::MODEL_ATTRIBUTES_MISSING_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_ATTRIBUTES_MISSING_DESC);
+            Utils::log('ERROR', 'MODEL ATTRIBUTES NOT PROVIDED IN actionView:  | ' . CJSON::encode($response), __CLASS__, __FUNCTION__, __LINE__);
+            return Utils::formatArray($response);
+        }
+        $id = $_GET['id'];
+        Utils::log('DEBUG', 'WILL FETCH MODEL ID: ' . $id, __CLASS__, __FUNCTION__, __LINE__);
+        $viewActionResponse = APIUtils::viewModel($model, $id);
+
+        Utils::log('INFO', 'RESPONSE FROM viewModel ACTION: ' . CJSON::encode($viewActionResponse), __CLASS__, __FUNCTION__, __LINE__);
+
+        //parse the response and determine appropriate action
+        //use STATUS_TYPE to determine success or failure
+        if ((!$viewActionResponse || !isset($viewActionResponse['STATUS_TYPE']) || $viewActionResponse['STATUS_TYPE'] != StatCodes::SUCCESS_CODE) && ($viewActionResponse['STATUS_CODE'] != StatCodes::RECORD_NOT_EXIST_CODE)) {
+            Utils::log('INFO', 'A SERVER ERROR OCCURRED ', __CLASS__, __FUNCTION__, __LINE__);
+            //this was a server error
+            $this->_sendResponse(500, $viewActionResponse);
+        } else {
+            //everything was ok
+            Utils::log('INFO', 'view REQUEST WAS OK', __CLASS__, __FUNCTION__, __LINE__);
+            $this->_sendResponse(200, $viewActionResponse['DATA'][$model]);
+        }
+        Yii::app()->end();
+    }
     
+    /**
+     * function to send the response from the server
+     * @param int $status
+     * @param string $body
+     * @param string $content_type
+     */
     private function _sendResponse($status = 200, $body = '', $content_type = null) {
-        if($content_type == null){
+        if ($content_type == null) {
             $content_type = 'application/json';
         }
         $status_header =
@@ -182,13 +286,13 @@ class APIController extends Controller {
                 default:
                     $message = 'The server encountered an error processing your request.';
                     break;
-                    
             }
             $body = $message;
         }
         echo CJSON::encode($body);
         exit;
     }
+
 }
 
 ?>
