@@ -59,7 +59,7 @@ class CrudCode extends CCodeModel
 		$class=@Yii::import($this->model,true);
 		if(!is_string($class) || !$this->classExists($class))
 			$this->addError('model', "Class '{$this->model}' does not exist or has syntax error.");
-		elseif(!is_subclass_of($class,'CActiveRecord'))
+		elseif(!is_subclass_of($class,'CActiveRecord') && !is_subclass_of($class, 'CModel'))
 			$this->addError('model', "'{$this->model}' must extend from CActiveRecord.");
 		else
 		{
@@ -103,6 +103,10 @@ class CrudCode extends CCodeModel
 	public function getModelClass()
 	{
 		return $this->_modelClass;
+	}
+
+	public function getARModelClass(){
+		return 'R'.$this->_modelClass;
 	}
 
 	public function getControllerClass()
