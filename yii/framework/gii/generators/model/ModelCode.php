@@ -375,6 +375,21 @@ class ModelCode extends CCodeModel
 		return $className;
 	}
 
+	protected function generateActiveResourceClassName($tableName)
+	{
+		if($this->tableName===$tableName || ($pos=strrpos($this->tableName,'.'))!==false && substr($this->tableName,$pos+1)===$tableName)
+			return 'R'.$this->modelClass;
+
+		$tableName=$this->removePrefix($tableName,false);
+		$className='';
+		foreach(explode('_',$tableName) as $name)
+		{
+			if($name!=='')
+				$className.=ucfirst($name);
+		}
+		return 'R'.$className;
+	}
+
 	/**
 	 * Generate a name for use as a relation name (inside relations() function in a model).
 	 * @param string the name of the table to hold the relation
@@ -412,4 +427,41 @@ class ModelCode extends CCodeModel
 		if(Yii::app()->hasComponent($this->connectionId)===false || !(Yii::app()->getComponent($this->connectionId) instanceof CDbConnection))
 			$this->addError('connectionId','A valid database connection is required to run this generator.');
 	}
+
+	/**
+     * function to get singular form of a word
+     * @param string $word the plural word
+     * @return string singular word
+     */
+    public function getSingular($word) {
+        $rules = array(
+            'ss' => false,
+            'os' => 'o',
+            'ies' => 'y',
+            'xes' => 'x',
+            'oes' => 'o',
+            'ves' => 'f',
+            'hes' => 'h',
+            'sses' => 'ss',
+            's' => '');
+
+        // Loop through all the rules and do the replacement.
+        foreach (array_keys($rules) as $key) {
+            // If the end of the word doesn't match the key,
+            // it's not a candidate for replacement. Move on
+            // to the next plural ending.
+            if (substr($word, (strlen($key) * -1)) != $key) {
+                continue;
+            }
+            // If the value of the key is false, stop looping
+            // and return the original version of the word.
+            if ($key === false) {
+                return $word;
+            }
+            // We've made it this far, so we can do the
+            // replacement.
+            $word = substr($word, 0, strlen($word) - strlen($key)) . $rules[$key];
+        }
+        return $word;
+    }
 }

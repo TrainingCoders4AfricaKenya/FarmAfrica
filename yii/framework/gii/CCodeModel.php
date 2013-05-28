@@ -478,4 +478,44 @@ abstract class CCodeModel extends CFormModel
 		if(in_array(strtolower($value),self::$keywords))
 			$this->addError($attribute, $this->getAttributeLabel($attribute).' cannot take a reserved PHP keyword.');
 	}
+
+	/**
+     * function to get singular form of a word
+     * @param string $word the plural word
+     * @author Fred Muya <kingkonig@gmail.com>
+     * @return string singular word
+     */
+    public function getSingular($word){
+        $rules = array(
+            'ss' => false,
+            'os' => 'o',
+            'ies' => 'y',
+            'xes' => 'x',
+            'oes' => 'o',
+            'ies' => 'y',
+            'ves' => 'f',
+            'hes' => 'h',
+            'sses' => 'ss',
+            's' => '');
+        
+        // Loop through all the rules and do the replacement.
+        foreach (array_keys($rules) as $key) {
+            // If the end of the word doesn't match the key,
+            // it's not a candidate for replacement. Move on
+            // to the next plural ending.
+            if (substr($word, (strlen($key) * -1)) != $key) {
+                continue;
+            }
+            // If the value of the key is false, stop looping
+            // and return the original version of the word.
+            if ($key === false) {
+                return $word;
+            }
+            // We've made it this far, so we can do the
+            // replacement.
+            $word = substr($word, 0, strlen($word) - strlen($key)) . $rules[$key];
+            
+        }
+        return $word;
+    }
 }
