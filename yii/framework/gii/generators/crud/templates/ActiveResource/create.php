@@ -18,7 +18,7 @@ echo "\$this->breadcrumbs=array(
 ?>
 
 $this->menu=array(
-	array('label' => Yii::t(Yii::app()->language, 'manage<?php echo $this->modelClass; ?>'), 'url' => array('create')),
+	array('label' => Yii::t(Yii::app()->language, 'manage<?php echo $this->modelClass; ?>'), 'url' => array('admin')),
 );
 ?>
 

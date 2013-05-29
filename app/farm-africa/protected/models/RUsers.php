@@ -6,13 +6,12 @@
  * @author muya
  */
 class RUsers extends GenericActiveResource {
-    /* The id that uniquely identifies a person. This attribute is not defined
-     * as a property      
-     * because we don't want to send it back to the service like a name, surname or    
-     * gender etc.
+
+    /**
+     * Returns the static model of the specified AR class.
+     * @param type $className
+     * @return type
      */
-
-
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
@@ -58,6 +57,13 @@ class RUsers extends GenericActiveResource {
             array('userID, userName, firstName, lastName, emailAddress, phoneNumber, status, dateCreated, createdBy, dateModified, modifiedBy', 'safe', 'on' => 'search'),
         );
     }
+    
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName() {
+        return 'users';
+    }
 
     /**
      * @return array customized attribute labels (name=>label)
@@ -70,7 +76,7 @@ class RUsers extends GenericActiveResource {
                     'lastName' => Yii::t(Yii::app()->language, 'lastName'),
                     'emailAddress' => Yii::t(Yii::app()->language, 'email'),
                     'phoneNumber' => Yii::t(Yii::app()->language, 'phoneNumber'),
-        ), parent::attributeLabels());
+                        ), parent::attributeLabels());
     }
 
     /**

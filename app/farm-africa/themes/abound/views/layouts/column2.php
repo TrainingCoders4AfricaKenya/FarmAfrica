@@ -54,20 +54,7 @@
             </tr>
           </tbody>
         </table>
-		<div class="well">
-        
-            <dl class="dl-horizontal">
-              <dt>Account status</dt>
-              <dd>$1,234,002</dd>
-              <dt>Open Invoices</dt>
-              <dd>$245,000</dd>
-              <dt>Overdue Invoices</dt>
-              <dd>$20,023</dd>
-              <dt>Converted Quotes</dt>
-              <dd>$560,000</dd>
-              
-            </dl>
-      </div>
+		
 		
     </div><!--/span-->
     <div class="span10">

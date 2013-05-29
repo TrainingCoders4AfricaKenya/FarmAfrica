@@ -27,6 +27,7 @@
 	  $cs->registerCssFile($baseUrl.'/css/bootstrap.min.css');
 	  $cs->registerCssFile($baseUrl.'/css/bootstrap-responsive.min.css');
 	  $cs->registerCssFile($baseUrl.'/css/abound.css');
+	  $cs->registerCssFile($baseUrl.'/css/custom.css');
 	  //$cs->registerCssFile($baseUrl.'/css/style-blue.css');
 	  ?>
       <!-- styles for style switcher -->
