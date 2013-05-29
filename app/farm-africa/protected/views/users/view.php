@@ -1,24 +1,24 @@
 <?php
 /* @var $this UsersController */
-/* @var $model Users */
+/* @var $model RUsers */
 
 $this->breadcrumbs=array(
-	'Users'=>array('index'),
+	Yii::t(Yii::app()->language, 'users')=>array('admin'),
 	$model->userID,
 );
 
 $this->menu=array(
-	array('label'=>'List Users', 'url'=>array('index')),
-	array('label'=>'Create Users', 'url'=>array('create')),
-	array('label'=>'Update Users', 'url'=>array('update', 'id'=>$model->userID)),
-	array('label'=>'Delete Users', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->userID),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Manage Users', 'url'=>array('admin')),
+	array('label' => Yii::t(Yii::app()->language, 'createUsers'), 'url' => array('create')),
+	array('label' => Yii::t(Yii::app()->language, 'updateUsers'), 'url' => array('update', 'id'=>$model->userID)),
+	array('label' => Yii::t(Yii::app()->language, 'deleteUsers'), 'url' => array('delete', 'id'=>$model->userID)),
+	array('label' => Yii::t(Yii::app()->language, 'manageUsers'), 'url' => array('admin')),
 );
 ?>
 
-<h1>View Users #<?php echo $model->userID; ?></h1>
+<h1><?php echo Yii::t(Yii::app()->language, 'viewUsers'); ?></h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
+        'htmlOptions'=>array('class'=>'table table-striped table-hover table-bordered resize-th'),
 	'data'=>$model,
 	'attributes'=>array(
 		'userID',
@@ -27,10 +27,10 @@ $this->menu=array(
 		'lastName',
 		'emailAddress',
 		'phoneNumber',
-		'status',
+		'status_.entityStateName',
 		'dateCreated',
-		'createdBy',
+		'createdBy_.userName',
 		'dateModified',
-		'modifiedBy',
+		'modifiedBy_.userName',
 	),
 )); ?>

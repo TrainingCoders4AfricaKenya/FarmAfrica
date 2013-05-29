@@ -18,6 +18,7 @@
                     'encodeLabel'=>false,
                     'items'=>array(
                         array('label'=>'Dashboard', 'url'=>array('/site/index')),
+                        array('label'=>'Users', 'url'=>array('/users/admin')),
                         array('label'=>'Graphs & Charts', 'url'=>array('/site/page', 'view'=>'graphs')),
                         array('label'=>'Forms', 'url'=>array('/site/page', 'view'=>'forms')),
                         array('label'=>'Tables', 'url'=>array('/site/page', 'view'=>'tables')),

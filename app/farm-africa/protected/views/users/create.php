@@ -1,18 +1,17 @@
 <?php
 /* @var $this UsersController */
-/* @var $model Users */
+/* @var $model RUsers */
 
 $this->breadcrumbs=array(
-	'Users'=>array('index'),
-	'Create',
+	Yii::t(Yii::app()->language, 'users')=>array('admin'),
+	Yii::t(Yii::app()->language, 'create'),
 );
 
 $this->menu=array(
-	array('label'=>'List Users', 'url'=>array('index')),
-	array('label'=>'Manage Users', 'url'=>array('admin')),
+	array('label' => Yii::t(Yii::app()->language, 'manageUsers'), 'url' => array('admin')),
 );
 ?>
 
-<h1>Create Users</h1>
+<h1><?php echo Yii::t(Yii::app()->language, 'createUsers'); ?></h1>
 
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>

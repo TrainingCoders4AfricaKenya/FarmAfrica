@@ -47,6 +47,7 @@ $('.search-form form').submit(function(){
 
 <?php echo "<?php"; ?> $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'<?php echo $this->class2id($this->modelClass); ?>-grid',
+    'itemsCssClass'=>'table table-striped table-hover ',
 	'dataProvider'=>$dataProvider,
 	'columns' => CMap::mergeArray(RestUtils::getDataProviderColumnNames($model, array(
 		<?php
