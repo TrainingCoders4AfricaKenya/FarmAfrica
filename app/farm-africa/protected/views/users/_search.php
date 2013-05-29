@@ -1,6 +1,6 @@
 <?php
 /* @var $this UsersController */
-/* @var $model Users */
+/* @var $model RUsers */
 /* @var $form CActiveForm */
 ?>
 
@@ -46,28 +46,8 @@
 		<?php echo $form->textField($model,'status',array('size'=>11,'maxlength'=>11)); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->label($model,'dateCreated'); ?>
-		<?php echo $form->textField($model,'dateCreated'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'createdBy'); ?>
-		<?php echo $form->textField($model,'createdBy',array('size'=>11,'maxlength'=>11)); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'dateModified'); ?>
-		<?php echo $form->textField($model,'dateModified'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'modifiedBy'); ?>
-		<?php echo $form->textField($model,'modifiedBy',array('size'=>11,'maxlength'=>11)); ?>
-	</div>
-
 	<div class="row buttons">
-		<?php echo CHtml::submitButton('Search'); ?>
+		<?php echo CHtml::submitButton('Search', array('class' => 'btn btn-info')); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

@@ -1,0 +1,10 @@
+/* 
+    Document   : custom
+    Created on : May 28, 2013, 11:59:10 PM
+    Author     : muya
+    Description:
+        Additional css rules required for farmAfrica project
+*/
+.resize-th th{
+    width: 25%;
+}
