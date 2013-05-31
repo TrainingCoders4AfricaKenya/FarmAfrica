@@ -214,7 +214,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		$model = $this->loadModel($id);
 
 		Utils::log('DEBUG', 'REQUEST: '.CJSON::encode($_REQUEST));
 
@@ -295,7 +295,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 	 */
 	public function actionAdmin()
 	{
-		$model=new <?php echo $this->modelClass; ?>('search');
+		$model=new <?php echo $this->getARModelClass; ?>('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['<?php echo $this->getARModelClass(); ?>']))
 			$model->attributes=$_GET['<?php echo $this->getARModelClass(); ?>'];

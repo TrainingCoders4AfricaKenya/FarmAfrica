@@ -61,6 +61,7 @@ class APIUtils {
         }
         $modelRecords = $model->findAll();
         if(is_array($modelRecords) && empty($modelRecords)){
+            $modelActionRespose = Utils::formatResponse();
             Utils::log('INFO', 'NO RECORDS FOUND | '.CJSON::encode($modelActionRespose), __CLASS__, __FUNCTION__, __LINE__);
         }
         else if(!$modelRecords){
