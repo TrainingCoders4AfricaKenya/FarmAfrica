@@ -37,8 +37,15 @@ return array(
     /* groups */
     'groupID' => 'Group ID',
     'group' => 'Group',
+    'groups' => 'Groups',
     'groupName' => 'Group Name',
     'successfullyFetchedGroupsRecords' => 'Successfully Fetched Groups Records',
+    'manageGroups' => 'Manage Groups',
+    'createGroups' => 'Create Groups',
+    'updateGroups' => 'Update Groups',
+    'deleteGroups' => 'Delete Groups',
+    'viewGroups' => 'View Groups',
+    'viewGroup' => 'View Group',
     
     
     'generalError' => 'Sorry, an error occurred.',

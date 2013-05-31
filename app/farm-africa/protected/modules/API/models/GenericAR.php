@@ -72,6 +72,11 @@ class GenericAR extends CActiveRecord {
         return $modelActionResponse;
     }
     
+    /**
+     * function to update a model
+     * @param type $override
+     * @return \GenericAR
+     */
     public function updateModel($override = false){
         Utils::log('INFO', 'ABOUT TO PERFORM ACTION UPDATE', __CLASS__, __FUNCTION__, __LINE__);
         $actionResponse = array();
@@ -124,8 +129,7 @@ class GenericAR extends CActiveRecord {
     private function createModel($override = false) {
         Utils::log('INFO', 'ABOUT TO PERFORM ACTION CREATE', __CLASS__, __FUNCTION__, __LINE__);
         $actionResponse = array();
-//        $this->insertedBy = Yii::app()->user->userID;
-//        $this->modifiedBy = Yii::app()->user->userID;
+        
         $this->dateCreated = Utils::now();
         $this->status = StatCodes::ES_ACTIVE;
 
