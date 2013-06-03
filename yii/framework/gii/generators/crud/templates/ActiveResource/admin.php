@@ -45,7 +45,7 @@ $('.search-form form').submit(function(){
 )); ?>\n"; ?>
 </div><!-- search-form -->
 
-<?php echo "<?php"; ?> $this->widget('zii.widgets.grid.CGridView', array(
+<?php echo "<?php"; ?> $this->widget('bootstrap.widgets.TbGridView', array(
 	'id'=>'<?php echo $this->class2id($this->modelClass); ?>-grid',
     'itemsCssClass'=>'table table-striped table-hover ',
 	'dataProvider'=>$dataProvider,
@@ -72,7 +72,7 @@ if($count>=7)
 	)), array(
         array(
         	'header'=>Yii::t(Yii::app()->language, 'actions'),
-            'class' => 'CButtonColumn',
+            'class' => 'bootstrap.widgets.TbButtonColumn',
             'template' => '{view}{update}{delete}',
             'buttons' => array(
             	'view' => array(

@@ -12,12 +12,12 @@
 
 <div class="form">
 
-<?php echo "<?php \$form=\$this->beginWidget('CActiveForm', array(
+<?php echo "<?php \$form=\$this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	'id'=>'".$this->class2id($this->modelClass)."-form',
 	'enableAjaxValidation'=>false,
 )); ?>\n"; ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
+	<p class="help-block">Fields with <span class="required">*</span> are required.</p>
 
 	<?php echo "<?php echo \$form->errorSummary(\$model); ?>\n"; ?>
 
