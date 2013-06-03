@@ -17,13 +17,9 @@
 					'itemCssClass'=>'item-test',
                     'encodeLabel'=>false,
                     'items'=>array(
-<<<<<<< HEAD
                         array('label'=>'Dashboard', 'url'=>array('/site/index')),
                         array('label'=>'Users', 'url'=>array('/users/admin')),
                         array('label'=>'Groups', 'url'=>array('/groups/admin')),
-=======
-                        array('label'=>'Home', 'url'=>array('/site/index')),
->>>>>>> eff3e5d2cecb1abb53b84a2ddbb4b7ec33d6880e
                         array('label'=>'Graphs & Charts', 'url'=>array('/site/page', 'view'=>'graphs')),
                         array('label'=>'Register', 'url'=>array('/site/page', 'view'=>'forms')),
                         array('label'=>'Tables', 'url'=>array('/site/page', 'view'=>'tables')),

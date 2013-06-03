@@ -14,6 +14,7 @@ return array(
     'delete' => 'Delete',
     'view' => 'View',
     'update' => 'Update',
+    'manage' => 'Manage',
     'filterRecords' => 'Filter Records',
     
     /* users */
