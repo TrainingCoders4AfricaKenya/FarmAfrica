@@ -12,8 +12,41 @@ $gridDataProvider = new CArrayDataProvider(array(
 	array('id'=>4, 'firstName'=>'Jacob', 'lastName'=>'Thornton', 'language'=>'JavaScript','usage'=>'<span class="inlinebar">1,3,16,5,12,5</span>'),
     array('id'=>5, 'firstName'=>'Stu', 'lastName'=>'Dent', 'language'=>'HTML','usage'=>'<span class="inlinebar">1,3,4,5,3,5</span>'),
 ));
-?>
-
+?><!--marketing tool-->
+<div class="rowfluid">
+<div class="span12">
+ <div class="carousel slide" id="home-carousel">
+	<div class="carousel-inner">
+	<div class="item active">
+	<img src="<?php echo Yii::app()->theme->baseUrl; ?>/img/err.png" width="300" height="300"  />
+	<div class="carousel-caption">
+		<p align= middle>Caption content here</p>
+	</div>
+	</div><div class="item">
+		<img src="<?php echo Yii::app()->theme->baseUrl; ?>/img/err.png" width="300" height="300"  />
+		<div class="carousel-caption">
+		<p align= middle>Caption content here</p>
+	</div>
+		</div><div class="item">
+			<img src="<?php echo Yii::app()->theme->baseUrl; ?>/img/err.png" width="300" height="300" />
+			<div class="carousel-caption">
+		<p align= middle>Caption content here</p>
+	</div>
+			</div><div class="item">
+				<img src="<?php echo Yii::app()->theme->baseUrl; ?>/img/err.png" width="300" height="300"  />
+				<div class="carousel-caption">
+		<p align= middle>Caption content here</p>
+	</div>
+			
+	</div><!-- .carousel-inner-->
+	<a class="carousel-control left" href="#home-carousel" dataslide="
+prev">&lsaquo;</a>
+<a class="carousel-control right" href="#home-carousel" dataslide="
+next">&rsaquo;</a>
+</div><!-- .carousel -->
+   </div> 
+</div> 
+</div>  
 <div class="row-fluid">
   <div class="span3 ">
 	<div class="stat-block">
@@ -277,3 +310,10 @@ $gridDataProvider = new CArrayDataProvider(array(
                                     });
             });
         </script>
+			   <script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/bootstrap-custom.min.js"></script>
+	<script>
+$(document).ready(function(){
+$('.carousel').carousel();
+}); // end document.ready
+</script>

@@ -31,6 +31,10 @@ class SiteController extends Controller
 		// using the default layout 'protected/views/layouts/main.php'
 		$this->render('index');
 	}
+	//check for errors
+	/**public function actionTestError(){
+		*throw new CHttpException(102, 'Testing 102');
+	}*/
 
 	/**
 	 * This is the action to handle external exceptions.
