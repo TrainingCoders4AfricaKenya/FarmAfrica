@@ -14,4 +14,8 @@ $this->menu=array(
 
 <h1><?php echo Yii::t(Yii::app()->language, 'createUsers'); ?></h1>
 
+<?php 
+Utils::displayFlashMessage();
+?>
+
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>

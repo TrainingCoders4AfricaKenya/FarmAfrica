@@ -34,7 +34,7 @@ $('.search-form form').submit(function(){
 )); ?>
 </div><!-- search-form -->
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+<?php $this->widget('bootstrap.widgets.TbGridView', array(
         'itemsCssClass'=>'table table-striped table-hover ',
 	'id'=>'users-grid',
 	'dataProvider'=>$dataProvider,
@@ -55,8 +55,8 @@ $('.search-form form').submit(function(){
 	)), array(
         array(
         	'header'=>Yii::t(Yii::app()->language, 'actions'),
-            'class' => 'CButtonColumn',
-            'template' => '{view}{update}{delete}',
+            'class' => 'bootstrap.widgets.TbButtonColumn',
+            'template' => '{view} {update} {delete}',
             'buttons' => array(
             	'view' => array(
             		'label' => Yii::t(Yii::app()->language, 'view'),

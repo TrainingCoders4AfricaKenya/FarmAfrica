@@ -6,12 +6,12 @@
 
 <div class="form">
 
-<?php $form=$this->beginWidget('CActiveForm', array(
+<?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	'id'=>'users-form',
 	'enableAjaxValidation'=>false,
 )); ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
+	<p class="help-block">Fields with <span class="required">*</span> are required.</p>
 
 	<?php echo $form->errorSummary($model); ?>
 
@@ -45,9 +45,10 @@
 		<?php echo $form->error($model,'phoneNumber'); ?>
 	</div>
 
-	<div class="row buttons">
+	<div class="row buttons row-fluid btn-group">
 		<?php echo CHtml::submitButton($model->isNewResource ? 'Create' : 'Save', array('class' => 'btn btn-info')); ?>
-		<a href="<?php echo Yii::app()->request->urlReferrer; ?>" class="btn"> Cancel </a>	</div>
+		<a href="<?php echo Yii::app()->request->urlReferrer; ?>" class="btn"> Cancel </a>	
+	</div>
 
 <?php $this->endWidget(); ?>
 

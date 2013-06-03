@@ -46,7 +46,7 @@ class RUsers extends GenericActiveResource {
 
     public function rules() {
         return array(
-//            array('userName, firstName, lastName', 'required'),
+           array('userName, firstName, lastName', 'required'),
             array('userName', 'length', 'max' => 30),
             array('firstName, lastName', 'length', 'max' => 45),
             array('emailAddress', 'length', 'max' => 100),
