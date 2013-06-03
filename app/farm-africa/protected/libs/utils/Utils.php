@@ -200,6 +200,73 @@ class Utils {
         return ucfirst($className);
     }
 
+//     <div class="alert alert-success">
+//   <button type="button" class="close" data-dismiss="alert">×</button>
+//   <strong>Well done!</strong> You successfully read this important alert message.
+// </div>
+
+    /**
+    * function to assemble the flash message to be displayed
+    * adds the required css classes & other HTML functionality required
+    * @param string $displayMsg message to be displayed
+    * @param string $errorType the type of message, defaults to null, meaning just an alert
+    * message
+    */
+    public static function createFlashMessage($displayMsg, $errorType = null){
+        if($errorType == null || trim($errorType) == ''){
+            $class = 'alert';
+        }
+        else{
+            $class = 'alert alert-'.trim($errorType);
+        }
+        $flashMsg = '<div class="'.$class.'">';
+        $flashMsg .= '<button type="button" class="close" data-dismiss="alert">x</button>';
+        $flashMsg .= $displayMsg;
+        $flashMsg .= '</div>';
+        return $flashMsg;
+    }
+
+    /**
+     * function to display error/success/info messages in the view, which have
+     * been set using the Yii::app()->user->setFlash() method
+     * @param string $msg
+     * @param $string $errorType
+     */
+    public static function displayFlashMessage($msg = NULL, $errorType = NULL) {
+        // <button type="button" class="close" data-dismiss="alert">×</button>
+        //first fetch the messages
+        $displayMsg = $error = '';
+        if($msg !== null && $errorType !== null){
+            $displayMsg = $msg;
+            $errorType = $errorType;
+            echo Utils::createFlashMessage($displayMsg, $errorType);
+        }
+        if(Yii::app()->user->hasFlash('success')){
+            $displayMsg = Yii::app()->user->getFlash('success');
+            $errorType = 'success';
+            echo Utils::createFlashMessage($displayMsg, $errorType);
+        }
+
+        if(Yii::app()->user->hasFlash('info')){
+            $displayMsg = Yii::app()->user->getFlash('info');
+            $errorType = 'info';
+            echo Utils::createFlashMessage($displayMsg, $errorType);
+        }
+
+        if(Yii::app()->user->hasFlash('error')){
+            $displayMsg = Yii::app()->user->getFlash('error');
+            $errorType = 'error';
+            echo Utils::createFlashMessage($displayMsg, $errorType);
+        }
+
+
+        if ($msg !== NULL && $errorType !== NULL) {
+            echo '<div class="alert fade in alert-' . $errorType . '">
+                  <span><p>' . $msg . '</p></span>
+                  </div>';
+        }
+    }
+
 }
 
 ?>
