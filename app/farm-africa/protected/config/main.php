@@ -107,7 +107,7 @@ $base_config = array(
                     'levels' => 'error, warning, trace',
                     'enabled' => false,
                     'logFile' => 'YII.log',
-                    'logPath' => '/var/log/applications/FarmAfrica/UI/',
+                   // 'logPath' => '/var/log/applications/FarmAfrica/UI/',
                     'maxFileSize' => '100000',
                     'maxLogFiles' => '10',
                 ),
@@ -130,9 +130,16 @@ $base_config = array(
     ),
     // application-level parameters that can be accessed
     // using Yii::app()->params['paramName']
-    'params' => CMap::mergeArray(
+   /* 'params' => CMap::mergeArray(
             require ('system.php'), require ('users.php')
     ),
+    * 
+    */
+    
+    'params'=>array(
+		// this is used in contact page
+		'adminEmail'=>'webmaster@example.com',
+	),
 );
 
 return $base_config;
