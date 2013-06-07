@@ -28,14 +28,15 @@ SET time_zone = "+00:00";
 
 CREATE TABLE IF NOT EXISTS `notifications` (
   `notificationID` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `notificationTypeID` int(11) NOT NULL,
+  `notificationTypeID` int(11) unsigned NOT NULL,
   `status` int(11) unsigned NOT NULL,
   `dateCreated` datetime NOT NULL,
   `dateModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `createdBy` int(11) unsigned NOT NULL,
   `modifiedBy` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`notificationID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  PRIMARY KEY (`notificationID`),
+  CONSTRAINT FOREIGN KEY (`notificationTypeID`) REFERENCES `notificationTypes`(`notificationTypeID`)
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -44,16 +45,17 @@ CREATE TABLE IF NOT EXISTS `notifications` (
 --
 
 CREATE TABLE IF NOT EXISTS `notificationTypes` (
-  `notificationID` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `notificationTypeID` int(11) NOT NULL,
+  `notificationTypeID` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `notificationTypeName` varchar(30) NOT NULL,
   `status` int(11) unsigned NOT NULL,
   `dateCreated` datetime NOT NULL,
   `createdBy` int(11) unsigned NOT NULL,
   `dateModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `modifiedBy` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`notificationID`),
-  UNIQUE KEY `categoryName` (`notificationTypeID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  PRIMARY KEY (`notificationTypeID`),
+  UNIQUE KEY `notificationTypeName` (`notificationTypeName`)
+) ENGINE=InnoDB;
+
 
 -- --------------------------------------------------------
 
@@ -71,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `sms` (
   `createdBy` int(11) unsigned NOT NULL,
   `modifiedBy` int(11) unsigned NOT NULL,
   PRIMARY KEY (`smsID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
