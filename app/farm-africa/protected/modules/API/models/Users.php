@@ -45,6 +45,8 @@ class Users extends GenericAR {
             array('userName', 'length', 'max' => 30),
             array('firstName, lastName', 'length', 'max' => 45),
             array('emailAddress', 'length', 'max' => 100),
+            array('emailAddress', 'email'),
+            array('emailAddress, phoneNumber', 'unique'),
             array('phoneNumber', 'length', 'max' => 15),
             array('status, createdBy, modifiedBy', 'length', 'max' => 11),
             // The following rule is used by search().
@@ -110,5 +112,41 @@ class Users extends GenericAR {
             'criteria' => $criteria,
         ));
     }
-
+    
+    /**
+     * function to get a user's full name
+     * @return type
+     */
+    public function getFullName(){
+        return trim($this->firstName. ' '. $this->lastName);
+    }
+    
+    /**
+     * override this here to perform some additional stuff, i.e. send link to 
+     * user's account
+     */
+    public function afterSave() {
+        $userID = $this->userID;
+        if($this->isNewRecord){
+            //for new user records, they should get a notification to allow them
+            //to set their passwords
+            $notificationSent = NotificationUtils::sendNewAccountNotification($userID, $emailAlert = true, $SMSAlert = true, $validateUser = false);
+        }
+//        $notificationSent = Utils::
+        return parent::afterSave();
+    }
+    
+    public function beforeValidate() {
+        //validate phone number, and convert it to int'l format
+        if(isset($this->phoneNumber) && $this->phoneNumber != ''){
+            $MSISDN = $this->phoneNumber;
+            $validMSISDN = Utils::isValidMobileNo($MSISDN);
+            if($validMSISDN == 0){
+                $this->addError('phoneNumber', 'Invalid mobile number');
+                return false;
+            }
+            $this->phoneNumber = $validMSISDN;
+        }
+        return parent::beforeValidate();
+    }
 }
