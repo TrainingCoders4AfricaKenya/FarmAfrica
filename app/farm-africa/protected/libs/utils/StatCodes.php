@@ -27,6 +27,10 @@ class StatCodes {
     const MODEL_ERROR_DURING_UPDATE_CODE = 207;
     const MODEL_UPDATED_SUCCESSFULLY_CODE = 208;
     const MODEL_ERROR_DURING_DELETE_CODE = 209;
+    const USER_NOT_EXIST_CODE = 210;
+    
+    /* NOTIFICATIONS MODULE STATUS CODES */
+    const NEW_NOTIFICATION_CODE = 300;
     
     /* API STATUS DESCRIPTIONS */
     const MODEL_MISSING_DESC = 'Model is missing from the API request';
@@ -39,6 +43,10 @@ class StatCodes {
     const MODEL_ERROR_DURING_UPDATE_DESC = 'Model error occurred during update';
     const MODEL_UPDATED_SUCCESSFULLY_DESC = 'Model updated successfully';
     const MODEL_ERROR_DURING_DELETE_DESC = 'Model error occurred during delete';
+    const USER_NOT_EXIST_DESC = 'The User does not exist';
+    
+    /* NOTIFICATIONS MODULE STATUS DESCRIPTIONS */
+    const NEW_NOTIFICATION_DESC= 'New notification';
 }
 
 ?>
