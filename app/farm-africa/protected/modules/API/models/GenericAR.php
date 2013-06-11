@@ -43,6 +43,11 @@ class GenericAR extends CActiveRecord {
      * @var string reasons for performing certain actions on the system 
      */
     public $narration;
+    
+    /**
+     * @var array array having any extra info to be sent back to caller application
+     */
+    public $extraData;
 
     /**
      * this function determines what action to perform on the given model
@@ -68,6 +73,7 @@ class GenericAR extends CActiveRecord {
         }
         $modelActionResponse['STATUS'] = $actionResponse['STATUS'];
         $modelActionResponse['DATA'] = $actionResponse['DATA'];
+        $modelActionResponse['DATA']['EXTRA'] = CJSON::encode($this->extraData);
         $modelActionResponse['DESCRIPTION'] = $actionResponse['REASON'];
         return $modelActionResponse;
     }
@@ -131,8 +137,11 @@ class GenericAR extends CActiveRecord {
         $actionResponse = array();
         
         $this->dateCreated = Utils::now();
-        $this->status = StatCodes::ES_ACTIVE;
-
+        $this->dateModified = Utils::now();
+        $this->status = (!isset($this->status) || ($this->status == '')) ? StatCodes::ES_ACTIVE : $this->status;
+        $this->modifiedBy = (!isset($this->modifiedBy) || ($this->modifiedBy == '')) ? PermissionUtils::SUPER_USER_ID : $this->modifiedBy;
+        $this->createdBy = (!isset($this->createdBy) || ($this->createdBy == '')) ? PermissionUtils::SUPER_USER_ID : $this->createdBy;
+        
         try {
             $actionResponse = array();
             $actionResponse['STATUS'] = $this->save();
@@ -141,7 +150,7 @@ class GenericAR extends CActiveRecord {
                 //save failed
                 $actionResponse['DATA']['ERROR'] = $this->getErrors();
                 $actionResponse['REASON'] = Yii::t(Yii::app()->language, 'failedToCreateThe{model}Record', array('{model}' => ucfirst($this->tableName())));
-                Utils::log('ERROR', 'AN ERROR OCCURRED WHILE TRYING TO SAVE THE MODEL'.CJSON::encode($actionResponse), __CLASS__, __FUNCTION__, __LINE__);
+                Utils::log('ERROR', 'AN ERROR OCCURRED WHILE TRYING TO SAVE THE '. $this->tableName() .' MODEL'.CJSON::encode($actionResponse), __CLASS__, __FUNCTION__, __LINE__);
                 
             } else {
                 //save was ok

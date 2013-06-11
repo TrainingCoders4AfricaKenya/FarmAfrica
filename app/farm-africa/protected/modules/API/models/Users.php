@@ -43,6 +43,7 @@ class Users extends GenericAR {
         return array(
             array('userName, firstName, lastName, status, dateCreated, createdBy, dateModified, modifiedBy', 'required'),
             array('userName', 'length', 'max' => 30),
+            array('userName', 'unique'),
             array('firstName, lastName', 'length', 'max' => 45),
             array('emailAddress', 'length', 'max' => 100),
             array('emailAddress', 'email'),
@@ -130,9 +131,9 @@ class Users extends GenericAR {
         if($this->isNewRecord){
             //for new user records, they should get a notification to allow them
             //to set their passwords
-            $notificationSent = NotificationUtils::sendNewAccountNotification($userID, $emailAlert = true, $SMSAlert = true, $validateUser = false);
+            $notificationStatus = NotificationUtils::sendNewAccountNotification($userID, $emailAlert = true, $SMSAlert = false);
+            $this->extraData['NOTIFICATION'] = $notificationStatus;
         }
-//        $notificationSent = Utils::
         return parent::afterSave();
     }
     
