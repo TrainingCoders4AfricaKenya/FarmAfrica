@@ -46,7 +46,7 @@ class RUsers extends GenericActiveResource {
 
     public function rules() {
         return array(
-           array('userName, firstName, lastName', 'required'),
+            array('userName, firstName, lastName', 'required'),
             array('userName', 'length', 'max' => 30),
             array('firstName, lastName', 'length', 'max' => 45),
             array('emailAddress', 'length', 'max' => 100),
@@ -57,7 +57,7 @@ class RUsers extends GenericActiveResource {
             array('userID, userName, firstName, lastName, emailAddress, phoneNumber, status, dateCreated, createdBy, dateModified, modifiedBy', 'safe', 'on' => 'search'),
         );
     }
-    
+
     /**
      * @return string the associated database table name
      */

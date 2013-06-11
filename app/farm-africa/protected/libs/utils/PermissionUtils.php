@@ -6,6 +6,7 @@
  * @author muya
  */
 class PermissionUtils {
+    const SUPER_USER_ID = 1;
     /**
      * function to check if user has permissions to perform the specified action
      * on the specified module

@@ -24,6 +24,7 @@ class APIUtils {
         $modelErrors = array();
         if (!$model->hasErrors()) {
             //model has no errors, return empty array
+            Utils::log('INFO', 'NO MODEL ERRORS FOUND. WILL RETURN EMPTY ARRAY ', __CLASS__, __FUNCTION__, __LINE__);
             return Utils::formatArray($modelErrors, $returnType);
         }
         //model has errors, loop through them and add them to modelErrors

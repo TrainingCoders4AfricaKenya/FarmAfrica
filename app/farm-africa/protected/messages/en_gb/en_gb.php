@@ -50,6 +50,7 @@ return array(
     
     
     'generalError' => 'Sorry, an error occurred.',
+    'newAccountCreatedEmailSubject' => 'User Account Information | New Account',
     
 );
 ?>

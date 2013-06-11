@@ -137,7 +137,8 @@ $base_config = array(
     // application-level parameters that can be accessed
     // using Yii::app()->params['paramName']
     'params' => CMap::mergeArray(
-            require ('system.php'), require ('users.php')
+            require ('system.php'), require ('users.php'),
+            require ('email.php')
     ),
 );
 
