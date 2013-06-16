@@ -295,7 +295,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 	 */
 	public function actionAdmin()
 	{
-		$model=new <?php echo $this->getARModelClass; ?>('search');
+		$model=new <?php echo $this->getARModelClass(); ?>('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['<?php echo $this->getARModelClass(); ?>']))
 			$model->attributes=$_GET['<?php echo $this->getARModelClass(); ?>'];
