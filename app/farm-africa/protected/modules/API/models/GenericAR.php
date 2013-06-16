@@ -178,8 +178,15 @@ class GenericAR extends CActiveRecord {
         $actionResponse['DATA']['model'] = $this;
         return $actionResponse;
     }
-
     
+    public function returnableForeignKeyFields(){
+        return array(
+            'createdBy',
+            'modifiedBy',
+            'dateCreated',
+            'dateModified'
+        );
+    }
 
 }
 

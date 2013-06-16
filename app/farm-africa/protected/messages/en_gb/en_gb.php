@@ -48,6 +48,23 @@ return array(
     'viewGroups' => 'View Groups',
     'viewGroup' => 'View Group',
     
+    /* notifications */
+    'notificationID' => 'Notification ID',
+    'notification' => 'Notification',
+    'notifications' => 'Notifications',
+    'notificationName' => 'Notification Name',
+    'successfullyFetchedNotificationsRecords' => 'Successfully Fetched Notifications Records',
+    'manageNotifications' => 'Manage Notifications',
+    'createNotifications' => 'Create Notifications',
+    'updateNotifications' => 'Update Notifications',
+    'deleteNotifications' => 'Delete Notifications',
+    'viewNotifications' => 'View Notifications',
+    'viewNotification' => 'View Notification',
+    'notificationTypeID' => 'Notification Type ID',
+    'destinationAddress' => 'Destination Address',
+    'messageDetails' => 'Message Details',
+    'notificationTypeName' => 'Notification Type Name',
+    
     
     'generalError' => 'Sorry, an error occurred.',
     'newAccountCreatedEmailSubject' => 'User Account Information | New Account',

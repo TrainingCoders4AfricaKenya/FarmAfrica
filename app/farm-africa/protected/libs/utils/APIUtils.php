@@ -74,7 +74,9 @@ class APIUtils {
         //prepare response
         $modelRows = array(); //the data that will be returned
         foreach ($modelRecords as $m) {
-            $modelRows[] = $m->attributes;
+            $modelAttributes = $m->attributes;
+            $modelAttributes = APIUtils::addFKInfo($modelAttributes, $className);
+            $modelRows[] = $modelAttributes;
         }
         $recordCount = count($modelRows);
         //add logic for counting # of records to prevent sending of too many records at once
@@ -203,7 +205,8 @@ class APIUtils {
             return $modelActionRespose;
         }
         $modelRecord = $model->findByPk($id);
-        
+        $modelRecord = $modelRecord->attributes;
+        $modelRecord = APIUtils::addFKInfo($modelRecord, $className);
         if(!$modelRecord){
             $modelActionRespose = Utils::formatResponse(null, StatCodes::RECORD_NOT_EXIST_CODE, StatCodes::FAILED_CODE, StatCodes::RECORD_NOT_EXIST_DESC);
             Utils::log('ERROR', 'AN ERROR OCCURRED WHILE TRYING TO FETCH MODEL RECORDS | '.CJSON::encode($modelActionRespose), __CLASS__, __FUNCTION__, __LINE__);
@@ -278,6 +281,49 @@ class APIUtils {
             } 
         }
         return $model;
+    }
+    
+    /**
+     * function to add relevant foreign key values to a model record
+     * @param array $modelRecord
+     * @param String $modelName
+     * @return array the model record with the additional info
+     */
+    public static function addFKInfo($modelRecord, $modelName){
+        if(!class_exists($modelName) || !is_subclass_of($modelName, 'CActiveRecord')){
+            Utils::log('ERROR', $modelName.' class does not exist or is not a sub class of CActiveRecord. Will not populate additional FK Info', __CLASS__, __FUNCTION__, __LINE__);
+            return $modelRecord;
+        }
+        $model = new $modelName();
+        $relations = $model->relations();
+        if(!empty($relations)){
+            Utils::log('DEBUG', 'Has Relations'.Utils::printArray($relations));
+            //loop through the relations, processing them and adding them to array
+            foreach ($relations as $key => $value) {
+                $relation = $value[0];
+                $foreignModelName = $value[1];
+                $foreignKeyName = $value[2];
+                
+                if($relation == GenericAR::BELONGS_TO){
+                    $FKModel = new $foreignModelName();
+                    if(!$FKModel){
+                        Utils::log('ERROR', 'UNABLE TO LOAD FOREIGN KEY MODEL: ', __CLASS__, __FUNCTION__, __LINE__);
+                        continue;
+                    }
+                    $foreignRecord = $FKModel->findByPk($modelRecord[$foreignKeyName]);
+                    $allowedFK = $FKModel->returnableForeignKeyFields();
+                    Utils::log('INFO', 'OBTAINED FOREIGN KEY INFO: '.CJSON::encode($foreignRecord). ' FROM: '.$modelRecord[$foreignKeyName], __CLASS__, __FUNCTION__, __LINE__);
+                    foreach($foreignRecord as $name => $val){
+                        Utils::log('DEBUG', 'NAME: '.$name.' | VAL: '.$val, __CLASS__, __FUNCTION__, __LINE__);
+                        if(in_array($name, $allowedFK)){
+                            $modelRecord['fk_'.$foreignKeyName.'_'.$name] = $val;
+                        }
+                        
+                    }
+                }
+            }
+        }
+        return $modelRecord;
     }
 }
 

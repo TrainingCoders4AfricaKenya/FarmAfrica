@@ -60,7 +60,8 @@ class Notifications extends GenericAR {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'notificationType' => array(self::BELONGS_TO, 'NotificationTypes', 'notificationTypeID'),
+            'notificationType_' => array(self::BELONGS_TO, 'NotificationTypes', 'notificationTypeID'),
+            'status_' => array(self::BELONGS_TO, 'StatusCodes', 'status'),
         );
     }
 
@@ -107,5 +108,7 @@ class Notifications extends GenericAR {
             'criteria' => $criteria,
         ));
     }
+    
+    
 
 }
