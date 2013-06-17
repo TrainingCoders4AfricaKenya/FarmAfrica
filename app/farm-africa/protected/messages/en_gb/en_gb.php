@@ -34,6 +34,10 @@ return array(
     'deleteUsers' => 'Delete Users',
     'viewUsers' => 'View Users',
     'viewUser' => 'View User',
+    'setPassword' => 'Set Password',
+    'newPassword' => 'New Password',
+    'pleaseRepeatYourPassword' => 'Please repeat your password',
+    'getNewToken' => 'Get New Token',
     
     /* groups */
     'groupID' => 'Group ID',
@@ -64,6 +68,7 @@ return array(
     'destinationAddress' => 'Destination Address',
     'messageDetails' => 'Message Details',
     'notificationTypeName' => 'Notification Type Name',
+    'message' => 'Message',
     
     
     'generalError' => 'Sorry, an error occurred.',

@@ -45,9 +45,9 @@ $('.search-form form').submit(function(){
 		'lastName',
 		'emailAddress',
 		'phoneNumber',
-		/*
-		'status',
+		'fk_status_userName',
 		'dateCreated',
+		/*
 		'createdBy',
 		'dateModified',
 		'modifiedBy',

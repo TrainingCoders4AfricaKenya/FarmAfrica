@@ -22,15 +22,15 @@ $this->menu=array(
 	'data'=>$model,
 	'attributes'=>array(
 		'notificationID',
-		'notificationTypeID',
+//		'notificationTypeID',
                 'fk_notificationTypeID_notificationTypeName',
 		'message',
 		'destinationAddress',
 		'messageDetails',            
                 'fk_status_statusDesc',
 		'dateCreated',
+		'fk_createdBy_userName',
 		'dateModified',
-		'createdBy_.userName',
-		'modifiedBy_.userName',
+		'fk_modifiedBy_userName',
 	),
 )); ?>

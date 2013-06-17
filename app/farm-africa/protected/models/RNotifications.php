@@ -55,9 +55,11 @@ class RNotifications extends GenericActiveResource {
                     'dateCreated' => array('type' => 'string'),
                     'dateModified' => array('type' => 'string'),
                     'createdBy' => array('type' => 'string'),
+                    'fk_createdBy_userName' => array('type' => 'string'),
                     'modifiedBy' => array('type' => 'string'),
                     'fk_notificationTypeID_notificationTypeName' => array('type' => 'string'),
                     'fk_status_statusDesc' => array('type' => 'string'),
+                    'fk_modifiedBy_userName' => array('type' => 'string'),
                         )
         );
     }
@@ -100,10 +102,12 @@ class RNotifications extends GenericActiveResource {
                     'messageDetails' => Yii::t(Yii::app()->language, 'messageDetails'),
                     'status' => Yii::t(Yii::app()->language, 'status'),
                     'fk_status_statusDesc' => Yii::t(Yii::app()->language, 'status'),
+//                    'createdBy' => Yii::t(Yii::app()->language, 'createdBy'),
+                    'fk_createdBy_userName' => Yii::t(Yii::app()->language, 'createdBy'),
                     'dateCreated' => Yii::t(Yii::app()->language, 'dateCreated'),
+//                    'modifiedBy' => Yii::t(Yii::app()->language, 'modifiedBy'),
+                    'fk_modifiedBy_userName' => Yii::t(Yii::app()->language, 'modifiedBy'),
                     'dateModified' => Yii::t(Yii::app()->language, 'dateModified'),
-                    'createdBy' => Yii::t(Yii::app()->language, 'createdBy'),
-                    'modifiedBy' => Yii::t(Yii::app()->language, 'modifiedBy'),
                         ), parent::attributeLabels()
         );
     }
@@ -119,6 +123,7 @@ class RNotifications extends GenericActiveResource {
             'sort' => array(
                 'attributes' => array(
                     'notificationID',
+                    'fk_notificationTypeID_notificationTypeName'
                 ),
             ),
             'pagination' => array(

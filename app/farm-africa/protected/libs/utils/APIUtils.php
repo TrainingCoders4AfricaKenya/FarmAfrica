@@ -311,6 +311,10 @@ class APIUtils {
                         continue;
                     }
                     $foreignRecord = $FKModel->findByPk($modelRecord[$foreignKeyName]);
+                    if(!$foreignRecord){
+                        Utils::log('ERROR', 'NO RECORD WITH GIVEN FOREIGN KEY: '.$modelRecord[$foreignKeyName], __CLASS__, __FUNCTION__, __LINE__);
+                        continue;
+                    }
                     $allowedFK = $FKModel->returnableForeignKeyFields();
                     Utils::log('INFO', 'OBTAINED FOREIGN KEY INFO: '.CJSON::encode($foreignRecord). ' FROM: '.$modelRecord[$foreignKeyName], __CLASS__, __FUNCTION__, __LINE__);
                     foreach($foreignRecord as $name => $val){

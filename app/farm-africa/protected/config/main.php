@@ -72,6 +72,11 @@ $base_config = array(
                     'pattern' => 'API/API/<model:\w+>',
                     'verb' => 'POST'
                 ),
+                array(
+                    'API/API/setPassword',
+                    'pattern' => 'API/API/<model:\w+>/setPassword',
+                    'verb' => 'POST'
+                ),
                 // Other controllers
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
@@ -95,7 +100,7 @@ $base_config = array(
             'connectionString' => 'mysql:host=localhost;dbname=farmAfrica',
             'emulatePrepare' => true,
             'username' => 'farmAfrica',
-            'password' => 'r00t',
+            'password' => '#Mkul1ma5*',
             'charset' => 'utf8',
         ),
         'errorHandler' => array(

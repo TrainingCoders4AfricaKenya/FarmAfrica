@@ -25,15 +25,15 @@ class UsersController extends Controller {
      */
     public function accessRules() {
         return array(
-            array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view'),
-                'users' => array('@'),
+            array('allow', // allow all users to perform 'setPassword' actions
+                'actions' => array('setPassword'),
+                'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update'),
+                'actions' => array('create', 'update','index', 'view', ),
                 'users' => array('@'),
             ),
-            array('allow', // allow admin user to perform 'admin' and 'delete' actions
+            array('allow', // allow authenticated user to perform 'admin' and 'delete' actions
                 'actions' => array('admin', 'delete'),
                 'users' => array('@'),
             ),
@@ -283,6 +283,49 @@ class UsersController extends Controller {
             'model' => $model,
             'dataProvider' => $dataProvider,
         ));
+    }
+    
+    /**
+     * controller action to allow users to set their password
+     */
+    public function actionSetPassword(){
+        $this->layout = '//layouts/column1';
+        Yii::app()->user->logout();
+        /*
+         * check for GET params
+         * if not set, redirect to log in
+         */
+        //check for get params
+        if((!isset($_GET['e']) || !isset($_GET['t'])) 
+                && (!isset($_POST['phoneNumber']) || (!isset($_POST['token'])))){
+            Utils::log('ERROR', 'SET PASSWORD REQUEST WITHOUT TOKENS. GET REQUEST: '.CJSON::encode($_GET)
+                    . 'POST REQUEST: '.CJSON::encode($_POST), __CLASS__, __FUNCTION__, __LINE__);
+            $this->redirect($this->createUrl('/site/login'));
+        }
+        //check if the form has been submitted
+        if(Yii::app()->request->isPostRequest){
+            Utils::log('DEBUG', 'POST CONTENTS: '.CJSON::encode($_POST));
+            if(!isset($_POST['newPassword']) || (!isset($_POST['newPassword_repeat']))){
+                $password = $_POST['newPassword'];
+                $passwordRepeat = $_POST['newPassword_repeat'];
+                
+            }
+        }
+        
+        $setPasswordForm = new SetPasswordForm();
+        $this->render('setPassword', array('model' => $setPasswordForm));
+        exit();
+        $authResponse = array();  //array to hold the authentication response received
+        if((isset($_GET['e'])) && (isset($_GET['t']))){
+            $emailAddress = $_GET['e'];
+            $token = $_GET['t'];
+            $authResponse = SecurityUtils::authenticateEmailPasswordRequest($emailAddress, $token);
+        }
+        else if ((isset($_POST['phoneNumber'])) && (isset($_POST['token']))){
+            $phoneNumber = $_POST['phoneNumber'];
+            $token = $_POST['token'];
+            $authResponse = SecurityUtils::authenticateSMSPasswordRequest($phoneNumber, $token);
+        }
     }
 
     /**

@@ -8,7 +8,7 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label' => Yii::t(Yii::app()->language, 'createNotifications'), 'url' => array('create')),
+//	array('label' => Yii::t(Yii::app()->language, 'createNotifications'), 'url' => array('create')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -40,15 +40,15 @@ $('.search-form form').submit(function(){
 	'dataProvider'=>$dataProvider,
 	'columns' => CMap::mergeArray(RestUtils::getDataProviderColumnNames($model, array(
 				'notificationID',
-		'notificationTypeID',
+//		'notificationTypeID',
                 'fk_notificationTypeID_notificationTypeName',
 //		'message',
 		'destinationAddress',
 //		'messageDetails',
 //		'status',
                 'fk_status_statusDesc',
-		/*
 		'dateCreated',
+		/*
 		'dateModified',
 		'createdBy',
 		'modifiedBy',
@@ -73,7 +73,8 @@ $('.search-form form').submit(function(){
             		'imageUrl' => Yii::app()->request->baseUrl . '/images/update.png',
             		//'options' => array(),
             		//'click' => '',
-            		'visible' => 'PermissionUtils::checkModuleActionPermission($moduleName = "notifications", $action = "update")',
+                        'visible' => 'false',
+//            		'visible' => 'PermissionUtils::checkModuleActionPermission($moduleName = "notifications", $action = "update")',
             	),
             	'delete' => array(
             		'label' => Yii::t(Yii::app()->language, 'delete'),

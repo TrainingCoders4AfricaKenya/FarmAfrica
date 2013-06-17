@@ -62,6 +62,8 @@ class Notifications extends GenericAR {
         return array(
             'notificationType_' => array(self::BELONGS_TO, 'NotificationTypes', 'notificationTypeID'),
             'status_' => array(self::BELONGS_TO, 'StatusCodes', 'status'),
+            'createdBy_' => array(self::BELONGS_TO, 'Users', 'createdBy'),
+            'modifiedBy_' => array(self::BELONGS_TO, 'Users', 'modifiedBy'),
         );
     }
 
