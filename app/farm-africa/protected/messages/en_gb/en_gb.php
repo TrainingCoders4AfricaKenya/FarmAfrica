@@ -34,6 +34,10 @@ return array(
     'deleteUsers' => 'Delete Users',
     'viewUsers' => 'View Users',
     'viewUser' => 'View User',
+    'setPassword' => 'Set Password',
+    'newPassword' => 'New Password',
+    'pleaseRepeatYourPassword' => 'Please repeat your password',
+    'getNewToken' => 'Get New Token',
     
     /* groups */
     'groupID' => 'Group ID',
@@ -47,6 +51,24 @@ return array(
     'deleteGroups' => 'Delete Groups',
     'viewGroups' => 'View Groups',
     'viewGroup' => 'View Group',
+    
+    /* notifications */
+    'notificationID' => 'Notification ID',
+    'notification' => 'Notification',
+    'notifications' => 'Notifications',
+    'notificationName' => 'Notification Name',
+    'successfullyFetchedNotificationsRecords' => 'Successfully Fetched Notifications Records',
+    'manageNotifications' => 'Manage Notifications',
+    'createNotifications' => 'Create Notifications',
+    'updateNotifications' => 'Update Notifications',
+    'deleteNotifications' => 'Delete Notifications',
+    'viewNotifications' => 'View Notifications',
+    'viewNotification' => 'View Notification',
+    'notificationTypeID' => 'Notification Type ID',
+    'destinationAddress' => 'Destination Address',
+    'messageDetails' => 'Message Details',
+    'notificationTypeName' => 'Notification Type Name',
+    'message' => 'Message',
     
     
     'generalError' => 'Sorry, an error occurred.',

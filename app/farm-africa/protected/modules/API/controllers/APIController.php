@@ -42,7 +42,7 @@ class APIController extends Controller {
         }
         Yii::app()->end();
     }
-    
+
     /**
      * function to update a given model
      * @return type
@@ -241,14 +241,14 @@ class APIController extends Controller {
         }
         Yii::app()->end();
     }
-    
+
     /**
      * 
      * @return type
      */
-    public function actionDelete(){
+    public function actionDelete() {
         Utils::log('INFO', 'ACTION DELETE INVOKED ', __CLASS__, __FUNCTION__, __LINE__);
-        
+
         //parse to get which model is required
         $model = (isset($_GET['model'])) ? $_GET['model'] : null;
         $model = trim($model);
@@ -260,7 +260,7 @@ class APIController extends Controller {
             return Utils::formatArray($response);
         }
         Utils::log('INFO', 'MODEL FOUND: ' . $model, __CLASS__, __FUNCTION__, __LINE__);
-        
+
         if (is_null($model) || $model == '') {
             //model not provided
             $response = Utils::formatResponse(null, StatCodes::MODEL_MISSING_CODE, StatCodes::FAILED_CODE, StatCodes::MODEL_MISSING_DESC);
@@ -277,7 +277,7 @@ class APIController extends Controller {
         }
         $id = $_GET['id'];
         Utils::log('DEBUG', 'WILL FETCH MODEL ID: ' . $id, __CLASS__, __FUNCTION__, __LINE__);
-        
+
         $deleteActionResponse = APIUtils::deleteModel($model, $id);
 
         Utils::log('INFO', 'RESPONSE FROM deleteModel ACTION: ' . CJSON::encode($deleteActionResponse), __CLASS__, __FUNCTION__, __LINE__);
@@ -296,7 +296,11 @@ class APIController extends Controller {
         Yii::app()->end();
     }
 
-        /**
+    public function actionSetPassword() {
+        Utils::log('INFO', 'ACTION SET PASSWORD INVOKED | POST CONTENTS: ' . CJSON::encode($_POST), __CLASS__, __FUNCTION__, __LINE__, false);
+    }
+
+    /**
      * function to send the response from the server
      * @param int $status
      * @param string $body

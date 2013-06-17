@@ -24,7 +24,8 @@
                         array('label'=>'Register', 'url'=>array('/site/page', 'view'=>'forms')),
                         array('label'=>'Tables', 'url'=>array('/site/page', 'view'=>'tables')),
 						array('label'=>'Interface', 'url'=>array('/site/page', 'view'=>'interface')),
-                        array('label'=>'Typography', 'url'=>array('/site/page', 'view'=>'typography')),
+//                        array('label'=>'Typography', 'url'=>array('/site/page', 'view'=>'typography')),
+                        array('label'=>'Notifications', 'url'=>array('/notifications/admin')),
                         /*array('label'=>'Gii generated', 'url'=>array('customer/index')),*/
                         array('label'=>'My Account <span class="caret"></span>', 'url'=>'#','itemOptions'=>array('class'=>'dropdown','tabindex'=>"-1"),'linkOptions'=>array('class'=>'dropdown-toggle','data-toggle'=>"dropdown"), 
                         'items'=>array(
