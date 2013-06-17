@@ -6,7 +6,7 @@
 return array(
     //Email credentials
     'MAILER_USERNAME' => 'no-reply@farmafrica.mygbiz.com', //Email username--to log in when sending emails
-    'MAILER_PASSWORD' => 'mailpassword', //Email password used to send emails
+    'MAILER_PASSWORD' => '#WingardiumLeviosa123*', //Email password used to send emails
     'MAILER_EMAIL' => 'no-reply@farmafrica.mygbiz.com', //email --to send emails
 
     //email details

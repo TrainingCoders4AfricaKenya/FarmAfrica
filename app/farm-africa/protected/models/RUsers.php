@@ -39,6 +39,7 @@ class RUsers extends GenericActiveResource {
                     'lastName' => array('type' => 'string'),
                     'emailAddress' => array('type' => 'string'),
                     'phoneNumber' => array('type' => 'string'),
+                    'fk_status_userName' => array('type' => 'string'),
         ));
     }
 
@@ -76,6 +77,7 @@ class RUsers extends GenericActiveResource {
                     'lastName' => Yii::t(Yii::app()->language, 'lastName'),
                     'emailAddress' => Yii::t(Yii::app()->language, 'email'),
                     'phoneNumber' => Yii::t(Yii::app()->language, 'phoneNumber'),
+                    'fk_status_userName' => Yii::t(Yii::app()->language, 'status'),
                         ), parent::attributeLabels());
     }
 

@@ -65,6 +65,7 @@ class Users extends GenericAR {
         return array(
             'createdBy_' => array(self::BELONGS_TO, 'Users', 'createdBy'),
             'modifiedBy_' => array(self::BELONGS_TO, 'Users', 'modifiedBy'),
+//            'status_' => array(self::BELONGS_TO, 'Users', 'modifiedBy'),
         );
     }
 
