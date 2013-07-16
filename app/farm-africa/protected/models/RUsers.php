@@ -6,7 +6,7 @@
  * @author muya
  */
 class RUsers extends GenericActiveResource {
-
+    public $group;
     /**
      * Returns the static model of the specified AR class.
      * @param type $className
@@ -40,6 +40,7 @@ class RUsers extends GenericActiveResource {
                     'emailAddress' => array('type' => 'string'),
                     'phoneNumber' => array('type' => 'string'),
                     'fk_status_userName' => array('type' => 'string'),
+                    'group' => array('type' => 'string')
         ));
     }
 
