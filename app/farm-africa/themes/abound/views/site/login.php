@@ -3,69 +3,24 @@
 /* @var $model LoginForm */
 /* @var $form CActiveForm  */
 
-$this->pageTitle=Yii::app()->name . ' - Login';
-$this->breadcrumbs=array(
-	'Login',
-);
+$this->pageTitle = Yii::app()->name . ' - Login';
+
 ?>
-<div class="page-header">
-	<h1>Login <small>to your account</small></h1>
-</div>
-<div class="row-fluid">
-	
+
+<div class="container">
     <div class="span6 offset3">
-<?php
-	$this->beginWidget('zii.widgets.CPortlet', array(
-		'title'=>"Private access",
-	));
-	
-?>
-
-
-
-    <p>Please fill out the following form with your login credentials:</p>
-    
-    <div class="form">
-    <?php $form=$this->beginWidget('CActiveForm', array(
-        'id'=>'login-form',
-        'enableClientValidation'=>true,
-        'clientOptions'=>array(
-            'validateOnSubmit'=>true,
-        ),
-    )); ?>
-    
-        <p class="note">Fields with <span class="required">*</span> are required.</p>
-    
-        <div class="row">
-            <?php echo $form->labelEx($model,'username'); ?>
-            <?php echo $form->textField($model,'username'); ?>
-            <?php echo $form->error($model,'username'); ?>
-        </div>
-    
-        <div class="row">
-            <?php echo $form->labelEx($model,'password'); ?>
-            <?php echo $form->passwordField($model,'password'); ?>
-            <?php echo $form->error($model,'password'); ?>
-            <p class="hint">
-                Hint: You may login with <kbd>demo</kbd>/<kbd>demo</kbd> or <kbd>admin</kbd>/<kbd>admin</kbd>.
-            </p>
-        </div>
-    
-        <div class="row rememberMe">
-            <?php echo $form->checkBox($model,'rememberMe'); ?>
-            <?php echo $form->label($model,'rememberMe'); ?>
-            <?php echo $form->error($model,'rememberMe'); ?>
-        </div>
-    
-        <div class="row buttons">
-            <?php echo CHtml::submitButton('Login',array('class'=>'btn btn btn-primary')); ?>
-        </div>
-    
-    <?php $this->endWidget(); ?>
-    </div><!-- form -->
-
-<?php $this->endWidget();?>
-
+        <form class="form-signin" id="login-form" method="post" action="<?php echo $this->createUrl('login') ?>">
+            <h2 class="form-signin-heading">Please sign in</h2>
+            <input type="text" class="input-block-level" placeholder="Email address" name="LoginForm[username]">
+            <input type="password" class="input-block-level" placeholder="Password" name="LoginForm[password]">
+            <label class="checkbox">
+                <input type="checkbox" value="remember-me"> Remember me
+            </label>
+            <div class="btn-group offset2">
+                <button class="btn btn-large btn-info" type="submit">Sign in</button>
+                <a class="btn btn-large" href="<?php echo $this->createUrl('signup') ?>">Sign Up</a>
+            </div>
+            
+        </form>
     </div>
-
 </div>

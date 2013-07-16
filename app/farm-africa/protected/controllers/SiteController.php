@@ -87,6 +87,12 @@ class SiteController extends Controller {
         // display the login form
         $this->render('login', array('model' => $model));
     }
+    
+    public function actionSignup(){
+        $userModel = new RUsers();
+        $this->render('signup', array('model' => $userModel));
+        exit();
+    }
 
     /**
      * Logs out the current user and redirect to homepage.

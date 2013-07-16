@@ -38,6 +38,10 @@ return array(
     'newPassword' => 'New Password',
     'pleaseRepeatYourPassword' => 'Please repeat your password',
     'getNewToken' => 'Get New Token',
+    'passwordTokenExpired' => 'Your password token has expired. Please request for a new token by clicking on the link below. A new link will be sent to your email account. Use it before it expires.',
+    'pleaseSetYourPassword' => 'Please set your password below',
+    'passwordMustBeAtLeast{length}Chars' => 'Password MUST be at least {length} characters',
+    'missingPasswordCharacters' => 'Password must contain atleast one symbol(\$%!),number(0-9),lowercase(a-z) and uppercase letter(A-Z)',
     
     /* groups */
     'groupID' => 'Group ID',

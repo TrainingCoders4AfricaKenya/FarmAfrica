@@ -76,10 +76,11 @@ class GenericActiveResource extends EActiveResource {
             Utils::log('DEBUG', 'NEW RESOURCE');
             //if this is a new record, set createdBy, dateCreated, modifiedBy 
             //(dateModified is auto in db)
+            $currUser = isset(Yii::app()->user->userID) ? Yii::app()->user->userID : 1;
             $this->status = StatCodes::ES_ACTIVE;
-            $this->createdBy = Yii::app()->user->userID;
+            $this->createdBy = $currUser;
             $this->dateCreated = Utils::now();
-            $this->modifiedBy = Yii::app()->user->userID;
+            $this->modifiedBy = $currUser;
             $this->dateModified = Utils::now();
         } else {
             Utils::log('DEBUG', 'UPDATE RESOURCE');
