@@ -32,6 +32,12 @@ class StatCodes {
     /* NOTIFICATIONS MODULE STATUS CODES */
     const NEW_NOTIFICATION_CODE = 300;
     
+    /*USERS MODULE STATUS CODES*/
+    const PASSWORD_TOKEN_EXPIRED_CODE = 400;
+    const PASSWORD_TOKEN_NOT_EXIST_CODE = 401;
+    const PASSWORD_TOKEN_VALID_CODE = 402;
+    const PASSWORD_TOKEN_USED_CODE = 403;
+    
     /* API STATUS DESCRIPTIONS */
     const MODEL_MISSING_DESC = 'Model is missing from the API request';
     const REQUESTED_MODEL_NOT_EXIST_DESC = 'The requested model does not exist';
@@ -47,6 +53,12 @@ class StatCodes {
     
     /* NOTIFICATIONS MODULE STATUS DESCRIPTIONS */
     const NEW_NOTIFICATION_DESC= 'New notification';
+    
+    /* USER MODULE STATUS DESCRIPTIONS*/
+    const PASSWORD_TOKEN_EXPIRED_DESC = 'User password token has expired';
+    const PASSWORD_TOKEN_NOT_EXIST_DESC = 'Password token provided does not exist';
+    const PASSWORD_TOKEN_VALID_DESC = 'Password token is valid';
+    const PASSWORD_TOKEN_USED_DESC = 'Password token has already been used';
 }
 
 ?>

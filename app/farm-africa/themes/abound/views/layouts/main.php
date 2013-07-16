@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title><?php echo Yii::app()->name; ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Free yii themes, free web application theme">
+    <meta name="description" content="FarmAfrica">
     <meta name="author" content="Webapplicationthemes.com">
 	<link href='http://fonts.googleapis.com/css?family=Carrois+Gothic' rel='stylesheet' type='text/css'>
 
@@ -47,6 +47,7 @@
 	  $cs->registerScriptFile($baseUrl.'/js/plugins/jquery.knob.js');
 	  $cs->registerScriptFile($baseUrl.'/js/plugins/jquery.masonry.min.js');
 	  $cs->registerScriptFile($baseUrl.'/js/styleswitcher.js');
+	  $cs->registerScriptFile($baseUrl.'/js/custom.js');
 	?>
   </head>
 
@@ -54,15 +55,24 @@
 
 <section id="navigation-main">   
 <!-- Require the navigation -->
-<?php require_once('tpl_navigation.php')?>
+<?php 
+if((Yii::app()->user->isGuest)){
+    
+}
+else{
+    require_once('tpl_navigation.php');
+}
+
+?>
 </section><!-- /#navigation-main -->
     
-<section class="main-body">
-    <div class="container-fluid">
-            <!-- Include content pages -->
-            <?php echo $content; ?>
-    </div>
-</section>
+<!--<section class="main-body">
+    
+</section>-->
+<div class="container-fluid">
+        <!-- Include content pages -->
+        <?php echo $content; ?>
+</div>
 
 <!-- Require the footer -->
 <?php require_once('tpl_footer.php')?>
