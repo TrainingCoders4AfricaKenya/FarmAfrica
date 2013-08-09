@@ -30,7 +30,7 @@ $this->pageTitle = Yii::app()->name . ' - Sign Up';
             <div class="controls" style="text-align: center">
                 <button class="btn btn-large btn-block btn-info" type="submit">Sign Up!</button>
                 <h2>OR</h2>
-                <a class="btn btn-large btn-block" href="<?php echo $this->createUrl('login') ?>">Log In</a>
+                <a class="btn btn-large btn-block" href="<?php echo $this->createUrl('/site/login') ?>">Log In</a>
             </div>
         </form>
     </div>

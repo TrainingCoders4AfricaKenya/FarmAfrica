@@ -48,7 +48,7 @@ foreach($this->tableSchema->columns as $column)
 <?php
 }
 ?>
-	<div class="row buttons">
+	<div class="row buttons row-fluid btn-group">
 		<?php echo "<?php echo CHtml::submitButton(\$model->isNewResource ? 'Create' : 'Save', array('class' => 'btn btn-info')); ?>\n"; ?>
 		<?php echo '<a href="<?php echo Yii::app()->request->urlReferrer; ?>" class="btn"> Cancel </a>'; ?>
 	</div>
