@@ -56,6 +56,18 @@ return array(
     'viewGroups' => 'View Groups',
     'viewGroup' => 'View Group',
     
+    /* user group mappings */
+    'userGroupMappingID' => 'User Group Mapping ID',
+    'userGroupMapping' => 'User Group Mapping',
+    'userGroupMappings' => 'User Group Mappings',
+    'successfullyFetchedGroupsRecords' => 'Successfully Fetched User Group Mappings Records',
+    'manageUserGroupMappings' => 'Manage User Group Mappings',
+    'createUserGroupMappings' => 'Create User Group Mappings',
+    'updateUserGroupMappings' => 'Update User Group Mappings',
+    'deleteUserGroupMappings' => 'Delete User Group Mappings',
+    'viewUserGroupMappings' => 'View User Group Mappings',
+    'viewUserGroupMapping' => 'View Group',
+    
     /* notifications */
     'notificationID' => 'Notification ID',
     'notification' => 'Notification',
@@ -74,6 +86,59 @@ return array(
     'notificationTypeName' => 'Notification Type Name',
     'message' => 'Message',
     
+    /* productTypes */
+    'productTypeID' => 'Product Type ID',
+    'productType' => 'Product Type',
+    'productTypes' => 'Product Types',
+    'productTypeName' => 'Product Type Name',
+    'successfullyFetchedProductTypesRecords' => 'Successfully Fetched Product Types Records',
+    'manageProductTypes' => 'Manage Product Types',
+    'createProductTypes' => 'Create Product Type',
+    'updateProductTypes' => 'Update Product Types',
+    'deleteProductTypes' => 'Delete Product Types',
+    'viewProductTypes' => 'View Product Types',
+    'viewProductType' => 'View Product Type',
+    
+    /*products*/
+    'productID' => 'Product ID',
+    'product' => 'Product',
+    'products' => 'Products',
+    'productName' => 'Product Name',
+    'successfullyFetchedProductsRecords' => 'Successfully Fetched Products Records',
+    'manageProducts' => 'Manage Products',
+    'createProducts' => 'Create Product',
+    'updateProducts' => 'Update Products',
+    'deleteProducts' => 'Delete Products',
+    'viewProducts' => 'View Products',
+    'viewProduct' => 'View Product',
+    
+    /*transactions*/
+    'transactionID' => 'Transaction ID',
+    'transaction' => 'Transaction',
+    'transactions' => 'Transactions',
+    'transactionName' => 'Transaction Name',
+    'successfullyFetchedTransactionsRecords' => 'Successfully Fetched Transactions Records',
+    'manageTransactions' => 'Manage Transactions',
+    'createTransactions' => 'Create Transaction',
+    'updateTransactions' => 'Update Transactions',
+    'deleteTransactions' => 'Delete Transactions',
+    'viewTransactions' => 'View Transactions',
+    'viewTransaction' => 'View Transaction',
+    
+     /* inboundMessages */
+    'inboundMessageID' => 'Inbound Message ID',
+    'inboundMessage' => 'Inbound Message',
+    'inboundMessages' => 'InboundMessages',
+    'successfullyFetchedInboundMessagesRecords' => 'Successfully Fetched Inbound Messages Records',
+    'manageInboundMessages' => 'Manage Inbound Messages',
+    'createInboundMessages' => 'Create Inbound Messages',
+    'updateInboundMessages' => 'Update Inbound Messages',
+    'deleteInboundMessages' => 'Delete Inbound Messages',
+    'viewInboundMessages' => 'View Inbound Messages',
+    'viewInboundMessage' => 'View Inbound Message',
+    'messageContent' => 'Message Content',
+    'externalTransactionID' => 'External Transaction ID',
+    'sourceAddress' => 'Source Address',
     
     'generalError' => 'Sorry, an error occurred.',
     'newAccountCreatedEmailSubject' => 'User Account Information | New Account',
