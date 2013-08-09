@@ -5,8 +5,8 @@
  * this class contains DB-related utility functions for FarmAfrica crons
  * @author muya
  */
-require_once '../config/config.php';
-require_once 'CronUtils.php';
+require_once dirname(__FILE__).'/../config/config.php';
+require_once dirname(__FILE__).'/CronUtils.php';
 class DBUtils {
 
     /**
@@ -102,12 +102,15 @@ class DBUtils {
      * data SET TO TRUE FOR INSERT & UPDATE STATEMENTS
      * @return formatResponse ARRAY
      */
-    public static function executePreparedStatement($SQL, $params, $fetchMode = PDO::FETCH_ASSOC, $dbConn = null, $noFetch = FALSE, $getLastInsert = FALSE) {
+    public static function executePreparedStatement($SQL, $params, $fetchMode = null, $dbConn = null, $noFetch = FALSE, $getLastInsert = FALSE) {
         if ($dbConn == null) {
             $dbConn = self::PDOConnect();
         }
         if ($dbConn == null) {
             return CronUtils::formatResponse(null, SC_GENERIC_FAILURE_CODE, SC_GENERIC_FAILURE_CODE, 'THERE WAS AN ERROR CONNECTING TO THE DATABASE');
+        }
+        if($fetchMode == null){
+            $fetchMode = PDO::FETCH_ASSOC;
         }
         try {
 

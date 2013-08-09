@@ -26,8 +26,10 @@ $this->menu=array(
 );
 ?>
 
-<h1><?php echo "<?php echo Yii::t(Yii::app()->language, 'view".$this->pluralize($this->class2name($this->modelClass))."'); ?>"; ?></h1>
-
+<h1><?php echo "<?php echo Yii::t(Yii::app()->language, 'view".$this->pluralize($this->modelClass)."'); ?>"; ?></h1>
+<?php 
+echo "\n<?php\nUtils::displayFlashMessage();\n?>\n";
+?>
 <?php echo "<?php"; ?> $this->widget('zii.widgets.CDetailView', array(
 	'htmlOptions'=>array('class'=>'table table-striped table-hover table-bordered resize-th'),
 	'data'=>$model,

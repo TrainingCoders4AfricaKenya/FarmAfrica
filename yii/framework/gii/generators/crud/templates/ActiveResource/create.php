@@ -22,6 +22,8 @@ $this->menu=array(
 );
 ?>
 
-<h1><?php echo "<?php echo Yii::t(Yii::app()->language, 'create".$this->pluralize($this->class2name($this->modelClass))."'); ?>"; ?></h1>
-
+<h1><?php echo "<?php echo Yii::t(Yii::app()->language, 'create".$this->pluralize($this->modelClass)."'); ?>"; ?></h1>
+<?php 
+echo "\n<?php\nUtils::displayFlashMessage();\n?>\n";
+?>
 <?php echo "<?php echo \$this->renderPartial('_form', array('model'=>\$model)); ?>"; ?>

@@ -35,10 +35,13 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1><?php echo "<?php echo Yii::t(Yii::app()->language, 'manage".$this->pluralize($this->class2name($this->modelClass))."'); ?>"; ?></h1>
+<h1><?php echo "<?php echo Yii::t(Yii::app()->language, 'manage".$this->pluralize($this->modelClass)."'); ?>"; ?></h1>
 
 <?php echo "<?php echo CHtml::link('<i class=\"icon-filter\"></i> '.Yii::t(Yii::app()->language, 'filterRecords'),'#',array('class'=>'search-button btn')); ?>"; ?>
 
+<?php 
+echo "\n<?php\nUtils::displayFlashMessage();\n?>\n";
+?>
 <div class="search-form" style="display:none">
 <?php echo "<?php \$this->renderPartial('_search',array(
 	'model'=>\$model,
