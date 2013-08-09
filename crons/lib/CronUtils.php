@@ -5,8 +5,8 @@
  *
  * @author muya
  */
-require_once '../config/statusCodes.php';
-require_once '../config/config.php';
+require_once dirname(__FILE__).'/../config/statusCodes.php';
+require_once dirname(__FILE__).'/../config/config.php';
 
 class CronUtils {
 
@@ -156,8 +156,11 @@ class CronUtils {
      * @param string $format the format in which to return the date
      * @return string
      */
-    public static function now($format = 'Y-m-d H:i:s') {
-        return date($format);
+    public static function now($format = 'Y-m-d H:i:s', $time = null) {
+        if($time == null){
+            $time = time();
+        }
+        return date($format, $time);
     }
 
     /**
@@ -176,6 +179,60 @@ class CronUtils {
             'STATUS_TYPE' => $statType,
             'STATUS_DESCRIPTION' => $statDesc,
         );
+    }
+    
+    public static function pollSMS($lastDate = null){
+        //create URL
+        //url-ify the data for the POST
+        $fields_string = $fields = null;
+        /*
+         * Params: * clientID - Required
+               clientID - Required
+              * apiKey - Required
+                date_last_request
+         */
+        $requestData = array(
+            'clientID' => API_CLIENT_ID,
+            'apiKey' => API_KEY,
+            'date_last_request' => $lastDate
+        );
+        foreach ($requestData as $key => $value) {
+            $fields_string .= $key . '=' . $value . '&';
+        }
+        
+        $serverResponse = self::http_post(POLL_SMS_URL, $requestData, $fields_string);
+        
+        self::log('INFO', 'POLL SMS API RESPONSE: '.json_encode($serverResponse), __FILE__, __FUNCTION__, __LINE__);
+        
+        if($serverResponse == false){
+            CronUtils::log('INFO', 'ERROR OCCURRED WHILE POLLING SMS REQUEST', __FILE__, __FUNCTION__, __LINE__);
+            return CronUtils::formatResponse(null, SC_POLL_SMS_FAILED_CODE, SC_GENERIC_FAILURE_CODE, 'False response from API');
+        }
+        
+        //parse response
+        $responseArray = (array) json_decode($serverResponse);
+        if(isset($responseArray['statusCode']) && $responseArray['statusCode'] == 200){
+            return CronUtils::formatResponse($responseArray, SC_POLL_SMS_SUCCESS_CODE, SC_GENERIC_SUCCESS_CODE, SC_POLL_SMS_SUCCESS_DESC);
+        }
+        else{
+            return CronUtils::formatResponse($responseArray, SC_POLL_SMS_FAILED_CODE, SC_GENERIC_FAILURE_CODE, SC_POLL_SMS_FAILED_DESC);
+        }
+    }
+    
+    public static function parsePolledSMSResult($pollSMSResult){
+        $parsedResult = array();
+        $counter = 0;
+        foreach($pollSMSResult as $res){
+            $currUniqueID = $res->unique_id;
+            $parsedResult[$counter]['externalTransactionID'] = $res->unique_id;
+            $parsedResult[$counter]['source'] = $res->from;
+            $parsedResult[$counter]['content'] = $res->sms_content;
+            $parsedResult[$counter]['externalDateCreated'] = $res->date;
+            $counter++;
+        }
+        
+        self::log('INFO', 'FULLY PARSED POLL SMS RESULT: '.json_encode($parsedResult), __CLASS__, __FUNCTION__, __LINE__);
+        return $parsedResult;
     }
 
     /**
@@ -204,19 +261,18 @@ class CronUtils {
             $fields_string .= $key . '=' . $value . '&';
         }
         
-        
-        $serverResponse = self::http_post(API_URL, $requestData, $fields_string);
+        $serverResponse = self::http_post(SEND_SMS_URL, $requestData, $fields_string);
         
         self::log('INFO', 'SEND SMS API RESPONSE: '.json_encode($serverResponse), __FILE__, __FUNCTION__, __LINE__);
         
         if($serverResponse == false){
             CronUtils::log('INFO', 'ERROR OCCURRED WHILE SENDING SMS REQUEST', __FILE__, __FUNCTION__, __LINE__);
-            die();
+            return CronUtils::formatResponse(null, SC_SMS_SEND_FAILED_CODE, SC_GENERIC_FAILURE_CODE, 'False response from API');
         }
         
         //parse response
         $responseArray = (array) json_decode($serverResponse);
-        if(isset($responseArray['statusCode']) && $responseArray['statusCde'] == 200){
+        if(isset($responseArray['statusCode']) && $responseArray['statusCode'] == 200){
             return CronUtils::formatResponse($responseArray, SC_SMS_SEND_SUCCESS_CODE, SC_GENERIC_SUCCESS_CODE, SC_SMS_SEND_SUCCESS_DESC);
         }
         else{
@@ -233,6 +289,8 @@ class CronUtils {
         //set the url, number of POST vars, POST data
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $proxy = '192.168.170.25:3135';
+        curl_setopt($ch, CURLOPT_PROXY, $proxy);
         //curl_setopt($ch, CURLOPT_MUTE,1);
         curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
         curl_setopt($ch, CURLOPT_POST, count($fields));
@@ -246,7 +304,7 @@ class CronUtils {
         //ssl options
         // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-        // curl_setopt($ch, CURLOPT_CAINFO, "/etc/pki/tls/certs/cellulant444.crt");
+        // curl_setopt($ch, CURLOPT_CAINFO, "/etc/path/to/some/cert/youdontknow.crt");
         //execute post
         $result = curl_exec($ch);
         //close connection
